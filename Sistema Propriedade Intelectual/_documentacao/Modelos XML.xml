@@ -1,0 +1,81 @@
+MODELO - XML - Despacho em Processo
+
+<processo numero="819830364" data-deposito="04/03/1997" data-concessao="29/12/2015" data-vigencia="29/12/2025">
+    <despachos>
+      <despacho codigo="IPAS158" nome="Concessão de registro"/>
+        <texto-complementar> Extinção de registro publicada na RPI 2329, de 25/08/2015, tendo em vista o recolhimento da retribuição relativa ao serviço de Prorrogação de registro de marca e expedição de certificado no prazo ordinário (pet. no. 800120233318, de 26/12/2012). </texto-complementar>
+      </despacho>
+    </despachos>
+    <titulares>
+      <titular nome-razao-social="WARNER BROS. ENTERTAINMENT INC." pais="US"/>
+    </titulares>
+    <marca apresentacao="Mista" natureza="De Produto">
+      <nome>MICHIGAN J. FROG</nome>
+    </marca>
+    <classes-vienna edicao="4">
+      <classe-vienna codigo="15.1.1"/>
+      <classe-vienna codigo="26.3.1"/>
+      <classe-vienna codigo="27.5.1"/>
+      <classe-vienna codigo="26.1.2"/>
+      <classe-vienna codigo="27.5.1"/>
+    </classes-vienna>
+    <classe-nacional codigo="25">
+      <especificacao>Roupas e acessórios do vestuário de uso comum.</especificacao>
+      <sub-classes-nacional>
+        <sub-classe-nacional codigo="10"/>
+        <sub-classe-nacional codigo="20"/>
+      </sub-classes-nacional>
+    </classe-nacional>
+<classe-nice codigo="32">
+      <especificacao>Polpa de frutas; </especificacao>
+    </classe-nice>
+    <apostila>Sem direito ao uso exclusivo da expressão &quot;apps&quot;.</apostila>
+    <prioridade-unionista>
+      <prioridade data="07/04/2011" numero="41-2011-0009522" pais="KR"/>
+    </prioridade-unionista>
+    <procurador>BHERING ADVOGADOS</procurador>
+  </processo>
+
+  
+MODELO - XML - Despacho em Petição
+
+<processo numero="822530660">
+    <despachos>
+      <despacho codigo="IPAS270" nome="Deferimento da petição">
+        <texto-complementar>SEDE ALTERADA.</texto-complementar>
+        <protocolo numero="850120115565" data="19/07/2012" codigoServico="3483">
+          <requerente nome-razao-social="MARK ANTHONY INTERNATIONAL SRL" pais="BB"/>
+          <procurador>DAVID DO NASCIMENTO ADVOGADOS ASSOCIADOS</procurador>
+        </protocolo>
+      </despacho>
+    </despachos>
+    <procurador>Suprema Marcas e Patentes Ltda. ME </procurador>
+</processo>
+
+
+
+  <processo numero="820615803" data-deposito="23/04/1998" data-concessao="13/03/2001" data-vigencia="13/03/2021">
+    <despachos>
+      <despacho codigo="IPAS270" nome="Deferimento da petição">
+        <protocolo numero="18110004410" data="08/02/2011" codigoServico="P07">
+          <requerente nome-razao-social="EVER GREEN INDÚSTRIA E COMÉRCIO LTDA" pais="BR" uf="SP"/>
+          <procurador>Luiz Antonio Ricco Nunes</procurador>
+        </protocolo>
+      </despacho>
+    </despachos>
+    <titulares>
+      <titular nome-razao-social="EVER GREEN INDÚSTRIA E COMÉRCIO LTDA" pais="BR" uf="SP"/>
+    </titulares>
+    <marca apresentacao="Mista" natureza="De Produto">
+      <nome>NATURALMENTE GEL</nome>
+    </marca>
+    <classes-vienna edicao="4">
+      <classe-vienna codigo="10.5.25"/>
+      <classe-vienna codigo="25.7.1"/>
+    </classes-vienna>
+    <classe-nice codigo="05">
+      <especificacao>ABSORVERNTES HIGIÊNICOS; </especificacao>
+    </classe-nice>
+    <apostila>Sem direito ao uso exclusivo da palavra &quot; GEL&quot;.</apostila>
+    <procurador>LUIZ ANTONIO RICCO NUNES</procurador>
+  </processo>

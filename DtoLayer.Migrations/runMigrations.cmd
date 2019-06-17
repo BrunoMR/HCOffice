@@ -1,0 +1,1 @@
+..\packages\FluentMigrator.1.6.1\tools\Migrate --conn "Server=MACHADO;Initial Catalog=HCOFFICE;User Id=sa;Password=developer" providerName="System.Data.SqlClient" --provider sqlserver2014 --assembly "bin\Debug\DtoLayer.Migrations.dll" --task migrate --output --outputFilename migrated.sql

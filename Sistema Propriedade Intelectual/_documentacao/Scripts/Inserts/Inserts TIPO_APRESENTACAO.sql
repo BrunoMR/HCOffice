@@ -1,0 +1,59 @@
+USE [HCOFFICE]
+GO
+
+INSERT INTO [dbo].[TIPO_APRESENTACAO]
+(
+	[DESCRICAO]
+	,[ORDEM]
+)
+VALUES
+(
+	'Nominativa',
+	1
+)
+GO
+
+USE [HCOFFICE]
+GO
+
+INSERT INTO [dbo].[TIPO_APRESENTACAO]
+(
+	[DESCRICAO]
+	,[ORDEM]
+)
+VALUES
+(
+	'Mista',
+	2
+)
+GO
+
+GO
+
+INSERT INTO [dbo].[TIPO_APRESENTACAO]
+(
+	[DESCRICAO]
+	,[ORDEM]
+)
+VALUES
+(
+	'Figurativa',
+	3
+)
+GO
+
+GO
+
+INSERT INTO [dbo].[TIPO_APRESENTACAO]
+(
+	[DESCRICAO]
+	,[ORDEM]
+)
+VALUES
+(
+	'Tridimensional',
+	4
+)
+GO
+
+

@@ -1,0 +1,33 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.Optimization
+@using SistemaWeb.ViewModels
+
+@model IEnumerable<UserViewModel>
+
+@{
+    ViewBag.Title = "Operador";
+}
+
+<div id="content-header">
+    <h1>@ViewBag.Title</h1>
+</div> <!-- #content-header -->
+
+<div id="content-container">
+
+    <div class="row">
+        @Html.Partial("_Operators", Model)
+    </div> <!-- /.table-responsive -->
+
+    <div class="row">
+        <a class="btn btn-success" href="@Url.Action("Registrar", "Operador")">
+            <i class="fa fa-plus"></i> Registrar
+        </a>
+    </div>
+
+</div> <!-- /.row -->
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/dataTable")
+    @Scripts.Render("~/bundles/cadastros")
+}

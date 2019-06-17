@@ -1,0 +1,72 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.Optimization
+@model DTOLayer.TipoApresentacao
+
+@{
+    ViewBag.Title = "Cadastro de Apresentação";
+}
+
+<div id="content-header">
+    <h1>Cadastro de Apresentação</h1>
+</div> <!-- #content-header -->
+
+<div id="content-container">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+
+        @using (Html.BeginForm("Save", "Apresentacao", Model))
+        {
+            <form id="validate-basic" data-validate="parsley" class="form parsley-form">
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label for="tipo">Código</label>
+                            @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Descricao">Descrição</label>
+                    @Html.TextAreaFor(model => model.Descricao, new { cols = 10, rows = 2, @class = "form-control", })
+                </div>
+
+                <div class="form-group">
+                    <label for="DescricaoIngles">Descrição (em Inglês)</label>
+                    @Html.TextAreaFor(model => model.DescricaoIngles, new { cols = 10, rows = 2, @class = "form-control", })
+                </div>
+
+                <div class="row">
+
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
+                        <a href="@Url.Action("Index", "Apresentacao")">
+                            <button type="button" class="btn btn-secondary">
+                                Cancelar
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        }
+        
+        </div>  <!--/.col-->
+    </div> <!-- /.row -->
+
+</div> <!-- /.content-container -->
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/textArea")
+    @Scripts.Render("~/bundles/apresentacao")
+    @Scripts.Render("~/bundles/cadastros")
+}

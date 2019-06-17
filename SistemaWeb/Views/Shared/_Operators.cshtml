@@ -1,0 +1,38 @@
+﻿@using SistemaWeb.ViewModels
+@model IEnumerable<UserViewModel>
+
+<table class="table table-striped table-bordered table-hover table-highlight table-checkable"
+       data-provide="datatable"
+       data-display-rows="100"
+       data-info="true"
+       data-search="true"
+       data-length-change="true"
+       data-paginate="true"
+       data-responsive="true">
+    <thead>
+        <tr>
+            <th data-direction="asc" data-filterable="true" data-sortable="true">Usuário</th>
+            <th data-direction="asc" data-filterable="true" data-sortable="true">Ação</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @if (Model != null)
+        {
+            foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Username</td>
+                    <td>
+                        <a href="@Url.Action("Delete", "Operator", new {id =  user.Id})">
+                            <i class="fa fa-eraser"></i> Excluir
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+
+</table>

@@ -1,0 +1,374 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using System.Web.Optimization
+@using DTOLayer.Enum
+@model SistemaWeb.ViewModels.FilterViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutTemporary.cshtml";
+    ViewBag.Title = "Pesquisa de Processos";
+}
+
+<div id="content-header">
+    <h1>Pesquisa de Processos</h1>
+</div> <!-- #content-header -->
+
+<div id="content-container" class="container-fluid edit">
+    @using (Html.BeginForm("Filtrar", "Busca", Model, FormMethod.Get, new { id = "search-form", target = "_blank" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                <label id="" for="Numero" class="col-md-2 control-label">Processo:</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("Numero", null, new { @class = "form-control", @multiple = "multiple" })
+                    @Html.ValidationMessageFor(model => model.Numero, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" for="Marca" class="col-md-2 control-label">Marca:</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.Marca, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Marca, "", new { @class = "text-danger" })
+                </div>
+
+                <label id="" for="Apostila" class="col-md-2 control-label">Apostila:</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.Apostila, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" for="Classe" class="col-md-2 control-label">Classe:</label>
+                <div class="col-md-4">
+                    @Html.DropDownList("Classe", null, new { @class = "form-control", @multiple = "multiple" })
+                </div>
+
+                <label id="" for="Especificacao" class="col-md-2 control-label">Especificação da classe:</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.Especificacao, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" for="Cfe4Processo" class="col-md-2 control-label">CFE(4):</label>
+                <div class="col-md-4">
+                    @Html.DropDownList("Cfe4", null, new { @class = "form-control", @multiple = "multiple" })
+                </div>
+
+                <label id="" for="DespachoComplemento" class="col-md-2 control-label">Complemento Despacho:</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.DespachoComplemento, new { @class = "form-control" })
+                </div>
+            </div>
+
+            @*<div class="col-sm-2" id="cpf-cnpj">
+                <span for="CpfCnpjInpi" class="label label-default">CNPJ/CPF/Nº INPI</span>
+            </div>*@
+            @*<div class="col-sm-4">
+                @Html.TextBoxFor(model => model.CpfCnpjInpi, new { @class = "form-control" })
+            </div>*@
+
+            <div class="form-group">
+                <label id="" for="Titular" class="col-md-2 control-label">Titular:</label>
+                <div class="col-md-4">
+                    @Html.DropDownList("Titular", null, new { @class = "form-control", @multiple = "multiple" })
+                </div>
+
+                <label id="" for="Pais" class="col-md-2 control-label">País titular:</label>
+                <div class="col-md-4">
+                    @Html.DropDownList("Pais", null, new { @class = "form-control", @multiple = "multiple" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" for="Procurador" class="col-md-2 control-label">Procurador:</label>
+                <div class="col-md-4">
+                    @Html.DropDownList("Procurador", null, new { @class = "form-control", @multiple = "multiple" })
+                </div>
+
+                <label id="" for="Estado" class="col-md-2 control-label">UF titular:</label>
+                <div class="col-md-4">
+                    @Html.DropDownList("Estado", null, new { @class = "form-control", @multiple = "multiple" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" for="Apresentacao" class="col-md-2 control-label">Apresentação:</label>
+                <div class="col-md-4">
+                    @Html.DropDownList("Apresentacao", null, new { @class = "form-control", @multiple = "multiple" })
+                </div>
+
+                <label id="" for="Rpi" class="col-md-2 control-label">Número RPI:</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.Rpi, new { @class = "form-control" })
+                </div>
+            </div>
+
+            @*<div class="col-sm-2" id="dataDep">
+                <span class="label label-default">Data Depósito</span>
+            </div>
+            <div class="col-sm-4">
+                <div class="col-sm-5">
+                    <input type="text" value="@Model.DataDepositoStart" class="form-control" name="DataDepositoStart" data-date-format="dd/mm/yyyy" data-date-autoclose="true">
+                    @Html.TextBoxFor(model => model.DataDepositoStart, new { @class = "form-control" })
+                </div>
+
+                <div class="col-sm-2">
+                    <span class="label label-default" id="entreDatas">á</span>
+                </div>
+
+                <div class="col-sm-5">
+                    <input type="text" value="@Model.DataDepositoEnd" class="form-control" name="DataDepositoEnd" data-date-format="dd/mm/yyyy" data-date-autoclose="true">
+                    @Html.TextBoxFor(model => model.DataDepositoEnd, new { @class = "form-control" })
+                </div>
+
+            </div>*@
+
+            @*<div class="row" id="cols-form-busca">
+                <div class="col-sm-2" id="dataConcess">
+                <div class="col-sm-2" id="dataDep">
+                    <span class="label label-default">Data Concessão</span>
+                </div>
+                <div class="col-sm-4">
+                    <div class="col-sm-5">
+                        @Html.TextBoxFor(model => model.DataConcessaoStart, new { @class = "form-control" })
+                    </div>
+
+                    <div class="col-sm-2">
+                        <span class="label label-default" id="entreDatas">á</span>
+                    </div>
+
+                    <div class="col-sm-5">
+                        @Html.TextBoxFor(model => model.DataConcessaoEnd, new { @class = "form-control" })
+                    </div>
+
+                </div>
+
+                <div class="col-sm-2" id="col-1-1">
+                    <span for="Rpi" class="label label-default">Número RPI</span>
+                </div>
+                <div class="col-sm-4">
+                    @Html.TextBoxFor(model => model.Rpi, new { @class = "form-control" })
+                </div>
+
+            </div>*@
+
+            @*<div class="row" id="cols-form-busca">
+
+                <div class="col-sm-2" id="col-1-1">
+                    <span for="Despacho" class="label label-default">Despacho</span>
+                </div>
+                <div class="col-sm-4">
+                    @Html.DropDownList("Despacho", null, new { @class = "form-control", @multiple = "multiple" })
+                </div>
+
+                @*<div class="col-sm-2" id="fonetica-col">
+                        <span class="label label-default" id="card-align-0">Último</span>
+                        @Html.CheckBoxFor(x => x.LastDespacho, new { @class = "form-control", @checked = true })
+                    </div>
+
+            </div>*@
+
+            @*<div class="row" id="cols-form-busca">
+                <div class="col-sm-2" id="apresentacao">
+                    <span for="numeroProcesso" class="label label-default">Apresentação</span>
+                </div>
+                <div class="col-sm-4">
+                    @Html.DropDownList("Apresentacao", null, new { @class = "form-control", @multiple = "multiple" })
+                </div>
+
+                <div class="col-sm-2" id="ordenacao-col">
+                        <span for="numeroProcesso" id="ordenacao" class="label label-default">Ordenação</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="ordenacao-input">
+                            <option>Marca</option>
+                            <option>Data de Depósito</option>
+                            <option>Classe</option>
+                            <option>Processo</option>
+                            <option>Titular</option>
+                        </select>
+                        <select name="select-input" id="tipo-input">
+                            <option>Crescente</option>
+                            <option>Decrescente</option>
+                        </select>
+                    </div>
+            </div>*@
+
+            <div class="row">
+
+                <div class="col-md-2">
+                    <div class="checkbox text-right">
+                        <label>
+                            @Html.CheckBoxFor(x => x.Radical, new { @class = "form-control", @checked = true })
+                            <i class="fa fa-check"></i>
+                             Radical
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="checkbox text-right">
+                        <label>
+                            @Html.CheckBoxFor(x => x.Prefix, new { @class = "form-control" })
+                            <i class="fa fa-check"></i>
+                             Prefixo
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="checkbox text-right">
+                        <label>
+                            @Html.CheckBoxFor(x => x.Suffix, new { @class = "form-control" })
+                            <i class="fa fa-check"></i>
+                             Sufixo
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="checkbox text-right">
+                        <label>
+                            @Html.CheckBoxFor(x => x.ExactBrand, new { @class = "form-control" })
+                            <i class="fa fa-check"></i>
+                             Marca Exata
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="checkbox text-right">
+                        <label>
+                            @Html.CheckBoxFor(x => x.ExactWord, new { @class = "form-control" })
+                            <i class="fa fa-check"></i>
+                             Palavra Exata
+                        </label>
+                    </div>
+                </div>
+
+                @*<div class="col-sm-3" id="img-col">
+                    <span class="label label-default" id="exib-img">Exibir Imagens</span>
+                    @Html.CheckBoxFor(x => x.ShowImages, new { @class = "form-control" })
+                </div>*@
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-2">
+                    <div class="checkbox text-right">
+                        <label>
+                            @Html.CheckBoxFor(x => x.Phonetic, new { @class = "form-control" })
+                            <i class="fa fa-check"></i>
+                             Busca Fonética
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="checkbox text-right">
+                        <label>
+                            @Html.CheckBoxFor(x => x.Affinity, new { @class = "form-control" })
+                            <i class="fa fa-check"></i>
+                             Afinidade de Classes
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="checkbox text-right">
+                        <label>
+                            @Html.CheckBoxFor(x => x.WithSpace, new { @class = "form-control" })
+                            <i class="fa fa-check"></i>
+                             Considerar Espaço
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="checkbox text-right">
+                        <label>
+                            @Html.CheckBoxFor(x => x.Extinct, new { @class = "form-control", @checked = true })
+                            <i class="fa fa-check"></i>
+                             Arquivado/Extinto
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="checkbox text-right">
+                        <label>
+                            @Html.CheckBoxFor(x => x.OnlyExtinct, new { @class = "form-control" })
+                            <i class="fa fa-check"></i>
+                             Somente Arquivado/Extinto
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-12 text-center" id="card-esquerdo-row-3">
+                <input type="submit" value="Pesquisar" class="btn btn-success" />
+                <a class="btn btn-warning" href="@Url.Action("Limpar", "Busca")">
+                    Limpar
+                </a>
+                @*<a class="btn btn-primary" href="@Url.Action("Imagens", "Busca")">
+                    Imagens
+                </a>*@
+            </div>
+        </div>
+    }
+
+</div>
+
+@section scripts
+{
+    <style>
+        /*.form-group {
+                margin-bottom: 5px !important;
+                margin-top: 5px !important;
+            }
+
+            .no-padding {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .panel-body {
+                padding: 5px !important;
+            }
+
+            .advanced-filters {
+                width: 47.3%;
+            }
+
+                .advanced-filters.control-label {
+                    text-align: left;
+                }
+
+            .advanced-filters-side .col-md-3 {
+                width: 28% !important;
+            }
+
+            .advanced-filters-side .col-md-4 {
+                width: 35% !important;
+            }
+
+            .advanced-filters-side .col-md-7 {
+                width: 64.4% !important;
+            }*/
+    </style>
+
+    @Scripts.Render("~/bundles/busca")
+}

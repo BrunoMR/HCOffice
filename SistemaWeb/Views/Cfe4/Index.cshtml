@@ -1,0 +1,88 @@
+﻿@using System.Web.Optimization
+@using PagedList.Mvc
+@using PagedList
+
+@model StaticPagedList<DTOLayer.CFE4>
+
+@{
+    ViewBag.Title = "Cfe4";
+}
+
+<div id="content-header">
+    <h1>Classe Vienna</h1>
+</div> <!-- #content-header -->
+
+<div id="content-container">
+
+    <div class="row">
+
+        <div class="table-responsive">
+
+            <table class="table table-striped table-bordered table-hover table-highlight table-checkable"
+                   data-provide="datatable">
+                <thead>
+                    <tr>
+                        <th data-direction="asc" data-filterable="true" data-sortable="true">Código CFE4</th>
+                        <th data-filterable="true" data-sortable="true">Descrição</th>
+                        <th style="width:5%">Editar</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var cfe4 in Model)
+                    {
+                        <tr>
+                            <td>@cfe4.CodigoCfe4</td>
+                            <td>@cfe4.Descricao</td>
+                            <td>
+                                <a href="@Url.Action("Detalhe", "Cfe4", new {id = @cfe4.Id})">
+                                    <button type="button" class="btn btn-info">
+                                        <i class="fa fa-edit (alias)"></i>
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div> <!-- /.table-responsive -->
+
+        <div class="row">
+            <div class="col-md-3">
+                <br />
+                Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+            </div>
+
+            <div class="col-md-9 pull-right">
+                @Html.PagedListPager(Model, page => Url.Action("Index",
+                    new { page }), new PagedListRenderOptions
+                    {
+                        LinkToNextPageFormat = "Próximo →",
+                        LinkToPreviousPageFormat = "← Anterior",
+                        ContainerDivClasses = new[] { "pull-right" }
+                    })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
+                <a href="@Url.Action("Novo", "Cfe4")">
+                    <button type="button" class="btn btn-success">
+                        <i class=" fa fa-plus"> Novo</i>
+                    </button>
+                </a>
+            </div>
+        </div>
+
+    </div> <!-- /.row -->
+
+</div> <!-- /.content-container -->
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/dataTable")
+    @Scripts.Render("~/bundles/cadastros")
+}

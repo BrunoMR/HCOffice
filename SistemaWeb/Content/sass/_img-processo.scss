@@ -1,0 +1,16 @@
+.img-processo {
+  text-align: center;
+
+  @media screen and (min-width: $screen-md) {
+    width: 200px;
+    height: 200px;
+    float: right;
+  }
+
+  .img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    border: 2px solid $black;
+  }
+}

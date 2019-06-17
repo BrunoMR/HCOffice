@@ -1,0 +1,45 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using System.Web.Optimization
+@model Identity.Model.ExternalLoginConfirmationViewModel
+@{
+    ViewBag.Title = "Registrar";
+}
+<div id="content-header">
+    <h1>@ViewBag.Title</h1>
+</div>
+
+<div id="content-container">
+    <div class="row">
+        <h3>Associe sua conta do @ViewBag.LoginProvider.</h3>
+
+        @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <p class="text-info">
+                
+                Você autenticou com sucesso com <strong>@ViewBag.LoginProvider</strong>.
+                Por favor entre com um usuário para este site abaixo e clique no botão registrar para finalizar
+                o seu cadastro.
+            </p>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-default" value="Registrar" />
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

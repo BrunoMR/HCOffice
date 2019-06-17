@@ -1,0 +1,133 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using System.Web.Optimization
+@using SistemaWeb.Extensions
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<head>
+
+    <title>@ViewBag.Title - HCOffice - Sistema de Marcas</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="">
+    <meta name="author" content="" />
+
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,800italic,400,600,800" type="text/css">
+    @Styles.Render("~/Content/cssTemporary")
+    @Styles.Render("~/Content/toastr")
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+
+        <header id="header">
+
+            <h1 id="site-logo">
+                <a href="./index.html">
+                    <img src="~/Content/img/Logos/logo.png" alt="Site Logo" />
+                </a>
+            </h1>
+
+            <a href="javascript:;" data-toggle="collapse" data-target=".top-bar-collapse" id="top-bar-toggle" class="navbar-toggle collapsed">
+                <i class="fa fa-cog"></i>
+            </a>
+
+            <a href="javascript:;" data-toggle="collapse" data-target=".sidebar-collapse" id="sidebar-toggle" class="navbar-toggle collapsed">
+                <i class="fa fa-reorder"></i>
+            </a>
+
+        </header> <!-- header -->
+
+
+        <nav id="top-bar" class="collapse top-bar-collapse">
+
+            <ul class="nav navbar-nav pull-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+                        <i class="fa fa-user"></i>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @User.Identity.Name
+                            <span class="caret"></span>
+                        }
+                        else
+                        {
+                            <text>Anonymous</text>
+                        }
+                    </a>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="@Url.Action("ForgotPassword", "Account")">
+                                    <i class="fa fa-key"></i>
+                                    &nbsp;&nbsp;Trocar Senha
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { role = "form", id = "logout-form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                }
+                                <a href="#" onclick="$('#logout-form').submit();">
+                                    <i class="fa fa-sign-out"></i>
+                                    &nbsp;&nbsp;Logout
+                                </a>
+                            </li>
+                        </ul>
+                    }
+                </li>
+            </ul>
+
+        </nav> <!-- /#top-bar -->
+
+
+        <div id="sidebar-wrapper" class="collapse sidebar-collapse">
+
+            <div id="search">
+                <!--<form>
+                    <input class="form-control input-sm" type="text" name="search" placeholder="Buscar..." />
+
+                    <button type="submit" id="search-btn" class="btn"><i class="fa fa-search"></i></button>
+                </form>		-->
+            </div> <!-- #search -->
+
+            @Html.Partial("_Menu")
+
+        </div> <!-- /#sidebar-wrapper -->
+
+
+        <div id="content">
+
+            @RenderBody()
+
+        </div> <!-- #content -->
+
+
+    </div> <!-- #wrapper -->
+
+    <footer id="footer">
+        <ul class="nav pull-right">
+            <li>
+                Copyright &copy; 2016, HCOffice Propriedade Intelectual
+            </li>
+        </ul>
+    </footer>
+
+    @Scripts.Render("~/bundles/main")
+    @Scripts.Render("~/bundles/toastr")
+    @Html.Partial("_Toastr")
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

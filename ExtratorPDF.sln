@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extrator_RPI_721_1380", "ExtratorPDF\Extrator_RPI_721_1380\Extrator_RPI_721_1380.csproj", "{A503DD69-4E75-40C4-BD84-ED03E313140D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extrator_29032005", "ExtratorPDF\Extrator_29032005\Extrator_29032005.csproj", "{70477CBA-3DE3-4CF5-82B4-1BA4C9676984}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extrator_23072013", "ExtratorPDF\Extrator_23072013\Extrator_23072013.csproj", "{B63ED8A7-988E-4259-AC1D-74811EA758D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A503DD69-4E75-40C4-BD84-ED03E313140D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A503DD69-4E75-40C4-BD84-ED03E313140D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A503DD69-4E75-40C4-BD84-ED03E313140D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A503DD69-4E75-40C4-BD84-ED03E313140D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70477CBA-3DE3-4CF5-82B4-1BA4C9676984}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70477CBA-3DE3-4CF5-82B4-1BA4C9676984}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70477CBA-3DE3-4CF5-82B4-1BA4C9676984}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70477CBA-3DE3-4CF5-82B4-1BA4C9676984}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B63ED8A7-988E-4259-AC1D-74811EA758D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B63ED8A7-988E-4259-AC1D-74811EA758D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B63ED8A7-988E-4259-AC1D-74811EA758D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B63ED8A7-988E-4259-AC1D-74811EA758D2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://lirazoqui.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ExtratorPDF\\Extrator_23072013\\Extrator_23072013.csproj
+		SccProjectName1 = ExtratorPDF/Extrator_23072013
+		SccLocalPath1 = ExtratorPDF\\Extrator_23072013
+		SccProjectUniqueName2 = ExtratorPDF\\Extrator_29032005\\Extrator_29032005.csproj
+		SccProjectName2 = ExtratorPDF/Extrator_29032005
+		SccLocalPath2 = ExtratorPDF\\Extrator_29032005
+		SccProjectUniqueName3 = ExtratorPDF\\Extrator_RPI_721_1380\\Extrator_RPI_721_1380.csproj
+		SccProjectName3 = ExtratorPDF/Extrator_RPI_721_1380
+		SccLocalPath3 = ExtratorPDF\\Extrator_RPI_721_1380
+	EndGlobalSection
+EndGlobal

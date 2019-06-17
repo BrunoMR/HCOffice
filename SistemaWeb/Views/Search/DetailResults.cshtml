@@ -1,0 +1,20 @@
+﻿@using System.Web.Mvc.Html
+@model SistemaWeb.ViewModels.DetailResultsViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutTemporary.cshtml";
+    ViewBag.Title = "DetailResults";
+}
+
+<div id="content-header">
+    <h1>Processo (s)</h1>
+</div> <!-- #content-header -->
+
+<div id="content-container" class="container-fluid">
+
+    @foreach (var processo in Model.ProcessoList)
+    {
+        @Html.Action("DetailResult", "Search", new { code = processo })
+    }
+
+</div> <!-- /.content-container -->

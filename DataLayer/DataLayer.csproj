@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B640BFD8-260F-4D70-80EC-4BB9045F8880}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataLayer</RootNamespace>
+    <AssemblyName>DataLayer</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Common, Version=4.0.54.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Common.4.0.54\lib\net40\ServiceStack.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Interfaces.4.0.54\lib\portable-wp80+sl5+net40+win8+monotouch+monoandroid+xamarin.ios10\ServiceStack.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite, Version=4.0.54.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.OrmLite.4.0.54\lib\net45\ServiceStack.OrmLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite.SqlServer, Version=4.0.54.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.4.0.54\lib\net45\ServiceStack.OrmLite.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=4.0.54.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.4.0.54\lib\net40\ServiceStack.Text.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ARepository.cs" />
+    <Compile Include="Extensions\PagingExtensions.cs" />
+    <Compile Include="IAtributoRepository.cs" />
+    <Compile Include="IEstadoRepository.cs" />
+    <Compile Include="IProcessoCfe4Repository.cs" />
+    <Compile Include="IRepository.cs" />
+    <Compile Include="Repository.cs" />
+    <Compile Include="ISyncElasticRepository.cs" />
+    <Compile Include="ITipoPessoaRepository.cs" />
+    <Compile Include="ITipoDespachoRepository.cs" />
+    <Compile Include="EstadoRepository.cs" />
+    <Compile Include="PaisRepository.cs" />
+    <Compile Include="ClienteRepository.cs" />
+    <Compile Include="Cfe4Repository.cs" />
+    <Compile Include="ClasseAfinidadeRepository.cs" />
+    <Compile Include="ClasseRepository.cs" />
+    <Compile Include="ConfiguracaoRepository.cs" />
+    <Compile Include="Connections\ConnectionDapper.cs" />
+    <Compile Include="Connections\ConnectionOrmLite.cs" />
+    <Compile Include="DataBaseRepository.cs" />
+    <Compile Include="DespachoRepository.cs" />
+    <Compile Include="IPaisRepository.cs" />
+    <Compile Include="IClienteRepository.cs" />
+    <Compile Include="ICfe4Repository.cs" />
+    <Compile Include="IClasseAfinidadeRepository.cs" />
+    <Compile Include="IClasseRepository.cs" />
+    <Compile Include="IConfiguracaoRepository.cs" />
+    <Compile Include="IDataBaseRepository.cs" />
+    <Compile Include="IDespachoRepository.cs" />
+    <Compile Include="IProcessoDespachoRepository.cs" />
+    <Compile Include="IProcessoRepository.cs" />
+    <Compile Include="IRpiRepository.cs" />
+    <Compile Include="ITipoSituacaoRepository.cs" />
+    <Compile Include="ITipoNaturezaRepository.cs" />
+    <Compile Include="ITipoApresentacaoRepository.cs" />
+    <Compile Include="ProcessoCfe4Repository.cs" />
+    <Compile Include="ProcessoDespachoRepository.cs" />
+    <Compile Include="ProcessoRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocoloRepository.cs" />
+    <Compile Include="RpiRepository.cs" />
+    <Compile Include="SyncElasticRepository.cs" />
+    <Compile Include="TipoApresentacaoRepository.cs" />
+    <Compile Include="AtributoRepository.cs" />
+    <Compile Include="TipoPessoaRepository.cs" />
+    <Compile Include="TipoNaturezaRepository.cs" />
+    <Compile Include="TipoDespachoRepository.cs" />
+    <Compile Include="TipoSituacaoRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DTOLayer\DTOLayer.csproj">
+      <Project>{5c7b1e0e-43a8-4d15-994d-7f413af05c86}</Project>
+      <Name>DTOLayer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

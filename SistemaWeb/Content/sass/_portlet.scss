@@ -1,0 +1,19 @@
+.portlet {
+  > .portlet-content {
+    margin-top: 0!important;
+
+    > .table-responsive {
+      .table {
+        > thead {
+          > tr {
+            > th {
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+    }
+  }
+}

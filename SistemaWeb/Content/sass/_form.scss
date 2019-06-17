@@ -1,0 +1,37 @@
+.checkbox {
+    overflow: hidden;
+    input {
+        position: absolute;
+        top: 0;
+        left: -10000px;
+        &:checked {
+            ~.fa {
+                display: block;
+            }
+        }
+    }
+    label {
+        position: relative;
+        &:before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 16px;
+            height: 16px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            transform: translateY(-50%);
+
+        }
+        .fa {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 1px;
+            color: #3e4095;
+            transform: translateY(-50%);
+        }
+    }
+}

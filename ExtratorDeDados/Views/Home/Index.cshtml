@@ -1,0 +1,83 @@
+﻿@model ExtratorDeDados.Models.RpiFilterModel
+
+@{
+    ViewBag.Title = "Importador HCOffice";
+}
+
+<div class="jumbotron">
+
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-sm-offset-3 col-md-offset-4 col-lg-offset-4">
+            <h1>
+                <abbr title="Arquivos .Txt e .Xml">
+                    Importador
+                </abbr>
+            </h1>
+
+            <h2>
+                <small>
+                    HCOffice Sistema de Propriedade Intelectual
+                </small>
+            </h2>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-sm-offset-3 col-md-offset-4 col-lg-offset-4">
+            <label for="path">Caminho dos Arquivos</label>
+            <input id="path" type="text" class="form-control" value="@(ViewBag.path)" disabled="true">
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-sm-offset-3 col-md-offset-4 col-lg-offset-4">
+            <label for="pathError">Caminho do Arquivo de Erro</label>
+            <input id="pathError" type="text" class="form-control" value="@(ViewBag.pathError)" disabled="true">
+        </div>
+
+    </div>
+
+    <br>
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-sm-offset-3 col-md-offset-4 col-lg-offset-4">
+            @Html.ActionLink("Fazer Backup", "CreateBackupDatabase", "Home", new { @class = "btn btn-danger" })
+            @Html.ActionLink("Importar", "ImportFiles", "Home", new { @class = "btn btn-primary" })
+            @Html.ActionLink("Sincronizar Processos", "Sync", "Home", new { @class = "btn btn-info" })
+            @Html.ActionLink("Sincronizar", "SyncData", "Home", new { @class = "btn btn-default" })
+        </div>
+
+    </div>
+
+    <div class="row">
+        @using (Html.BeginForm("SyncByRpi", "Home", Model))
+        {
+            <div class="form-group">
+                <label class="control-label col-md-1">Inicial</label>
+                <div class="col-md-5">
+                    @Html.TextBoxFor(model => model.Start, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-1">Final</label>
+                <div class="col-md-5">
+                    @Html.TextBoxFor(model => model.End, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-sm-offset-3 col-md-offset-4 col-lg-offset-4">
+                <input type="submit" value="Sincronizar RPI" class="btn btn-primary" />
+            </div>
+        }
+
+
+    </div>
+</div>
+@section scripts
+{
+    @Html.Partial("_Toastr")
+}

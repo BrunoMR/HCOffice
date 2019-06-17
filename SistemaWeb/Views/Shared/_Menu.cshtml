@@ -1,0 +1,111 @@
+﻿@using SistemaWeb.Extensions
+
+<nav id="sidebar">
+    <ul id="main-nav" class="open-active">
+        @if (User.Identity.IsAuthenticated)
+        {
+            if (User.HasAnyRoles("Root, Admin, Operator"))
+            {
+                <li id="busca">
+                    <a href="@Url.Action("Entrada", "Busca")">
+                        <i class="fa fa-search"></i>
+                        Busca de marcas
+                    </a>
+                </li>
+            }
+
+            if (User.HasAnyRoles("Root, Admin, Customer"))
+            {
+                <li id="cadastros" class="dropdown">
+                    <a href="javascript:;">
+                        <i class="fa fa-cogs"></i>
+                        Cadastros
+                        <span class="caret"></span>
+                    </a>
+
+                    <ul class="sub-nav">
+                        @if (User.HasAnyRoles("Customer"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Operator")">
+                                    <i class="fa fa-tasks"></i>
+                                    Operador
+                                </a>
+                            </li>
+                        }
+
+                        @if (User.HasAnyRoles("Root, Admin"))
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Cliente")">
+                                    <i class="fa fa-tasks"></i>
+                                    Cliente
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Processo")">
+                                    <i class="fa fa-tasks"></i>
+                                    Processo
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Classe")">
+                                    <i class="fa fa-tasks"></i>
+                                    Classe
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "ClasseAfinidade")">
+                                    <i class="fa fa-tasks"></i>
+                                    Classe Afinidade
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Cfe4")">
+                                    <i class="fa fa-tasks"></i>
+                                    CFE4
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Atributo")">
+                                    <i class="fa fa-tasks"></i>
+                                    Atributo
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Despacho")">
+                                    <i class="fa fa-tasks"></i>
+                                    Despacho
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Apresentacao")">
+                                    <i class="fa fa-tasks"></i>
+                                    Apresentação
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Natureza")">
+                                    <i class="fa fa-tasks"></i>
+                                    Natureza
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Pais")">
+                                    <i class="fa fa-tasks"></i>
+                                    País
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "Estado")">
+                                    <i class="fa fa-tasks"></i>
+                                    Estado
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+        }
+    </ul>
+</nav>

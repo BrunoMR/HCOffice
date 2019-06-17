@@ -1,0 +1,3 @@
+﻿$(function () {
+    $("#cadastros").addClass("active");
+})

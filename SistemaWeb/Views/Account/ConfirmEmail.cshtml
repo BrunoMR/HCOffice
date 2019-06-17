@@ -1,0 +1,16 @@
+﻿@using System.Web.Mvc.Html
+@{
+    ViewBag.Title = "Confirmar E-mail";
+}
+
+<div id="content-header">
+    <h1>@ViewBag.Title</h1>
+</div>
+
+<div id="content-container">
+    <div class="row">
+        <p>
+            Obrigado por confirmar seu e-mail. Por favor @Html.ActionLink("Clique aqui para continuar", "Index", "Home", routeValues: null, htmlAttributes: new { id = "loginLink" })
+        </p>
+    </div>
+</div>

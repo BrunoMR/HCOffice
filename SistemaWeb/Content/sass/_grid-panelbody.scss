@@ -1,0 +1,28 @@
+.grid-panelbody {
+
+  @media screen and (min-width: $screen-md) {
+    display: block;
+  
+    > tbody {
+      display: block;
+  
+      > tr {
+        display: flex;
+  
+        > td {
+          flex: 1;
+  
+          &:first-child {
+            display: flex;
+            justify-content: flex-end;
+            align-content: flex-start;
+            min-width: 300px!important;
+            width: 300px!important;
+            max-width: 300px!important;
+            padding-right: 30px!important;
+          }
+        }
+      }
+    }
+  }
+}

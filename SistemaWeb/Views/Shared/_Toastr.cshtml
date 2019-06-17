@@ -1,0 +1,6 @@
+﻿@using SistemaWeb.Toastr
+@if (TempData.ContainsKey("Toastr"))
+{
+    var toastr = TempData["Toastr"] as Toastr;
+    @ToastrBuilder.ShowToastMessages(toastr);
+}

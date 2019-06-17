@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5C7B1E0E-43A8-4D15-994D-7F413AF05C86}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DTOLayer</RootNamespace>
+    <AssemblyName>DTOLayer</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Nest">
+      <HintPath>..\packages\NEST.2.3.1\lib\net46\Nest.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Common, Version=4.0.54.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Common.4.0.54\lib\net40\ServiceStack.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Interfaces.4.0.54\lib\portable-wp80+sl5+net40+win8+monotouch+monoandroid+xamarin.ios10\ServiceStack.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite, Version=4.0.54.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.OrmLite.4.0.54\lib\net45\ServiceStack.OrmLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite.SqlServer, Version=4.0.54.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.4.0.54\lib\net45\ServiceStack.OrmLite.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=4.0.54.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.4.0.54\lib\net40\ServiceStack.Text.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CFE4.cs" />
+    <Compile Include="Citacao.cs" />
+    <Compile Include="Atributo.cs" />
+    <Compile Include="Classe.cs" />
+    <Compile Include="ClasseAfinidade.cs" />
+    <Compile Include="Domain\Domain.cs" />
+    <Compile Include="Domain\DomainProcess.cs" />
+    <Compile Include="Enum\ChangeName.cs" />
+    <Compile Include="Enum\TypeSearch.cs" />
+    <Compile Include="Enum\Combination.cs" />
+    <Compile Include="Enum\YesNo.cs" />
+    <Compile Include="Filter.cs" />
+    <Compile Include="IEntity.cs" />
+    <Compile Include="Indexes\AtributoIndex.cs" />
+    <Compile Include="Indexes\EstadoIndex.cs" />
+    <Compile Include="Indexes\PaisIndex.cs" />
+    <Compile Include="Indexes\ClasseAfinidadeSync.cs" />
+    <Compile Include="Indexes\ClasseAfinidadeIndex.cs" />
+    <Compile Include="Indexes\ApresentacaoIndex.cs" />
+    <Compile Include="Indexes\DespachoIndex.cs" />
+    <Compile Include="Indexes\Cfe4Index.cs" />
+    <Compile Include="Indexes\DespachoSync.cs" />
+    <Compile Include="Indexes\Cfe4Sync.cs" />
+    <Compile Include="Indexes\ClasseSync.cs" />
+    <Compile Include="ClasseNacional.cs" />
+    <Compile Include="ClasseNice.cs" />
+    <Compile Include="ClasseVienna.cs" />
+    <Compile Include="Cliente.cs" />
+    <Compile Include="Configuracao.cs" />
+    <Compile Include="Despacho.cs" />
+    <Compile Include="DespachoImported.cs" />
+    <Compile Include="Despachos.cs" />
+    <Compile Include="Indexes\SubClasseSync.cs" />
+    <Compile Include="Indexes\ClasseIndex.cs" />
+    <Compile Include="Marca.cs" />
+    <Compile Include="Pagination.cs" />
+    <Compile Include="Pais.cs" />
+    <Compile Include="Prioridade.cs" />
+    <Compile Include="Prioridades.cs" />
+    <Compile Include="Processo.cs" />
+    <Compile Include="ProcessoCfe4.cs" />
+    <Compile Include="ProcessoDespacho.cs" />
+    <Compile Include="ProcessoIds.cs" />
+    <Compile Include="ProcessoImported.cs" />
+    <Compile Include="ProcessoDespachoImported.cs" />
+    <Compile Include="Indexes\ProcessoIndex.cs" />
+    <Compile Include="ProcessoSync.cs" />
+    <Compile Include="Indexes\TitularIndex.cs" />
+    <Compile Include="Indexes\ProcuradorIndex.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocolo.cs" />
+    <Compile Include="CessionarioImported.cs" />
+    <Compile Include="ProtocoloImported.cs" />
+    <Compile Include="Requerente.cs" />
+    <Compile Include="DetailResultSearch.cs" />
+    <Compile Include="ResultSearch.cs" />
+    <Compile Include="Rpi.cs" />
+    <Compile Include="RpiImported.cs" />
+    <Compile Include="SubClasseNacional.cs" />
+    <Compile Include="SubClassesNacional.cs" />
+    <Compile Include="Tax\FileEfd.cs" />
+    <Compile Include="Tax\Line0150.cs" />
+    <Compile Include="Tax\Line0400.cs" />
+    <Compile Include="Tax\LineC170.cs" />
+    <Compile Include="Tax\LineC100.cs" />
+    <Compile Include="TipoApresentacao.cs" />
+    <Compile Include="TipoNatureza.cs" />
+    <Compile Include="TipoPessoa.cs" />
+    <Compile Include="TipoDespacho.cs" />
+    <Compile Include="TipoSituacao.cs" />
+    <Compile Include="Titular.cs" />
+    <Compile Include="Titulares.cs" />
+    <Compile Include="Uf.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj">
+      <Project>{18f42ed2-61bc-4629-afa2-8df456b52ec8}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,11 @@
+.margin-bottom-default-sm {
+    @media screen and (max-width: 767px) {
+        margin-bottom: $number-default;
+    }
+}
+
+.margin-bottom-default-md {
+    @media screen and (max-width: 991px) {
+        margin-bottom: $number-default;
+    }
+}

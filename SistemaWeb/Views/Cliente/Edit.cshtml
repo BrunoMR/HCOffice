@@ -1,0 +1,220 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using System.Web.Optimization
+@using SistemaWeb.ViewModels
+@model CustomerViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutTemporary.cshtml";
+    ViewBag.Title = "Cadastro de Cliente";
+}
+
+@Styles.Render("~/Content/sass/dist/bootstrap.min.css")
+@Styles.Render("~/Content/sass/dist/App.css")
+
+<div id="content-header">
+    <h1>Cadastro de Cliente</h1>
+</div> <!-- #content-header -->
+
+<div id="content-container" class="container-fluid edit">
+
+    @using (Html.BeginForm("Save", "Cliente", FormMethod.Post, new { id = "validate-basic", @class = "form-horizontal" }))
+    {
+        @Html.HiddenFor(model => model.Id)
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">Tipo Pessoa:</label>
+                <div class="col-md-2">
+                    @Html.DropDownListFor(x => x.TipoPessoaId, (IEnumerable<SelectListItem>)ViewBag.TipoPessoas, "Selecione...", new { @class = "form-control" })
+                </div>
+                <div class="col-md-8"></div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">Nome/Razão Social:</label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Nome, new { maxlength = 100, @class = "form-control", })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">Nome Fantasia:</label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.NomeFantasia, new { maxlength = 100, @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">CPF/CNPJ:</label>
+                <div class="col-md-2 margin-bottom-default-md">
+                    @Html.TextBoxFor(model => model.CpfCnpj, new { maxlength = 20, @class = "form-control" })
+                </div>
+                <label id="" class="col-md-1 control-label">RG/IE:</label>
+                <div class="col-md-2 margin-bottom-default-md">
+                    @Html.TextBoxFor(model => model.Rg, new { maxlength = 20, @class = "form-control" })
+                </div>
+                <label id="" class="col-md-2 control-label">Inscr. Municipal:</label>
+                <div class="col-md-3">
+                    @Html.TextBoxFor(model => model.IncricaoMunicipal, new { maxlength = 20, @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">Endereço:</label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Endereco, new { maxlength = 200, @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id='' class="col-md-2 control-label">Bairro:</label>
+                <div class="col-md-5 margin-bottom-default-md">
+                    @Html.TextBoxFor(model => model.Bairro, new { maxlength = 100, @class = "form-control" })
+                </div>
+                <label id="" class="col-md-1 control-label">Cidade:</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.Cidade, new { maxlength = 20, @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">CEP:</label>
+                <div class="col-md-2 margin-bottom-default-md">
+                    @Html.TextBoxFor(model => model.Cep, new { maxlength = 20, @class = "form-control" })
+                </div>
+                <label id="" class="col-md-2 control-label">UF:</label>
+                <div class="col-md-1 margin-bottom-default-md">
+                    @Html.TextBoxFor(model => model.Uf, new { maxlength = 20, @class = "form-control" })
+                </div>
+                <label id="" class="col-md-1 control-label">País:</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.Uf, new { maxlength = 20, @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">Telefone:</label>
+                <div class="col-md-2 margin-bottom-default-md">
+                    @Html.TextBoxFor(model => model.TelefoneEmpresa, new { maxlength = 20, @class = "form-control" })
+                </div>
+                <label id="" class="col-md-2 control-label">Tel Celular:</label>
+                <div class="col-md-2 margin-bottom-default-md">
+                    @Html.TextBoxFor(model => model.TelefoneContato, "{0:(##) #####-####}", new { maxlength = 20, @class = "form-control" })
+                </div>
+                <label id="" class="col-md-1 control-label">Skype:</label>
+                <div class="col-md-3">
+                    <input type="text" id="" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">E-mail:</label>
+                <div class="col-md-10">
+                    <input type="email" id="" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">Website:</label>
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.EnderecoEletronico, new { cols = 10, rows = 1, @class = "form-control noresize", })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">Observação:</label>
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.Observacao, new { cols = 10, rows = 3, @class = "form-control noresize", })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="NomeContato" class="col-md-2 control-label">Nome Contato:</label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.NomeContato, new { maxlength = 100, @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="TelefoneContato" class="col-md-2 control-label">
+                    Tel Contato:
+                </label>
+                <div class="col-md-2 margin-bottom-default-md">
+                    @Html.TextBoxFor(model => model.TelefoneContato, "{0:(##) #####-####}", new { maxlength = 20, @class = "form-control" })
+                </div>
+                <label for="CelContato" class="col-md-2 control-label">
+                    Tel Celular:
+                </label>
+                <div class="col-md-2 margin-bottom-default-md">
+                    <input type="text" id="" class="form-control">
+                </div>
+                <label id="" class="col-md-1 control-label">Skype:</label>
+                <div class="col-md-3">
+                    <input type="text" id="" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">E-mail Contato:</label>
+                <div class="col-md-10">
+                    <input type="text" id="" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">Licenças Busca de Marca:</label>
+                <div class="col-md-1 margin-bottom-default-md" id="">
+                    @Html.TextBoxFor(model => model.MaxLicencas, new { cols = 10, rows = 3, @class = "form-control", })
+                </div>
+                <label class="col-md-2 control-label">Usuário Administrador:</label>
+                <div class="col-md-3 margin-bottom-default-md">
+                    @Html.TextBoxFor(model => model.Email, new { maxlength = 100, @class = "form-control" })
+                </div>
+                <label class="col-md-2 control-label">Senha do Admin.:</label>
+                <div class="col-md-2">
+                    @Html.TextBoxFor(model => model.CustomerPassword, new { maxlength = 100, @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">Relação de usuários:</label>
+                <div class="col-md-10" id="">
+                    @Html.Partial("_Operators", Model?.Operators)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="" class="col-md-2 control-label">Logotipo Cliente:</label>
+                <div class="col-md-2 margin-bottom-default-md" id="">
+                    <div class="file-sent-box">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <input type="file" id="" class="margin-bottom-default-md">
+                    <div class="btn-box">
+                        <a class="btn btn-warning" href="@Url.Action("Index", "Cliente")">
+                            Cancelar
+                        </a>
+                        <input type="submit" value="Salvar" class="btn btn-danger" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="checkbox text-right">
+                        <label>
+                            <input type="checkbox">
+                            <i class="fa fa-check"></i>
+                             Ativo
+                        </label>
+                    </div>
+                </div>
+            </div>
+    }
+
+</div> <!-- /.content-container -->
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/textArea")
+    @*@Scripts.Render("~/bundles/cliente")*@
+    @Scripts.Render("~/bundles/cadastros")
+}

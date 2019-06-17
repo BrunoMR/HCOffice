@@ -1,0 +1,1 @@
+..\packages\FluentMigrator.1.6.1\tools\Migrate --conn "Server=FAGNER-PC\MSSQLSERVER12;Initial Catalog=HCOFFICE;Integrated Security=true" --provider sqlserver2014 --assembly "bin\Debug\DtoLayer.Migrations.dll" --task rollback --output --outputFilename migrated.sql
