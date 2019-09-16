@@ -3,7 +3,7 @@
 -- Create date: 15/12/2017
 -- Description:	Este procedimento irá atualizar a base local com com a rpi passada por parâmetro
 -- =============================================
-CREATE PROCEDURE UPDATE_DATABASE_BY_RPI
+CREATE PROCEDURE [dbo].[UPDATE_DATABASE_BY_RPI]
   @rpi INT
 AS
 BEGIN
@@ -24,7 +24,7 @@ BEGIN
   SELECT
     *
   FROM
-    AZURE_LAST.dbo.RPI
+    MyAzureDb.HCOFFICE_FULL.dbo.RPI
   WHERE
     NUMERO = @rpi;
 
@@ -207,5 +207,5 @@ BEGIN
     @processCfe4List
 
 END
-go
 
+GO

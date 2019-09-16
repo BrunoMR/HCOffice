@@ -7,9 +7,7 @@ CREATE PROCEDURE [dbo].[BUILD_RADICAL_BY_WORD_OF_BRAND]
   @processoNumero VARCHAR(20),
   @brand NVARCHAR(MAX),
   @withPreffixAndSuffix BIT,
-  @justMainTerm BIT,
-  @theFullMainTerm BIT,
-  @class NVARCHAR(100)
+  @justMainTerm BIT
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -27,20 +25,9 @@ BEGIN
           dbo.ORTOGRAFAR(splitData) as term
         FROM
            dbo.SplitString(@brand, ' ')
-		   OUTER APPLY dbo.FormatClassesFromFile(@class) cla
         WHERE
-		  NOT EXISTS
-		  (
-			SELECT
-			  *
-			FROM
-			  PALAVRA_USO_COMUM
-			WHERE
-			  NUMERO_CLASSE = Cla.class
-			  AND dbo.ORTOGRAFAR(PALAVRA) = dbo.ORTOGRAFAR(splitData)
-		  )
-          AND dbo.ORTOGRAFAR(splitData) IS NOT NULL
-          AND LEN(dbo.ORTOGRAFAR(splitData)) >= 2
+          dbo.ORTOGRAFAR(splitData) IS NOT NULL
+          AND LEN(dbo.ORTOGRAFAR(splitData)) >= 5
 
     OPEN procesesCursor
 
@@ -53,10 +40,7 @@ BEGIN
           @processoNumero,
           @marca,
           @withPreffixAndSuffix,
-          @justMainTerm,
-		  @theFullMainTerm,
-          0,
-          0
+          @justMainTerm
 
         FETCH procesesCursor INTO @marca;
       END
@@ -65,5 +49,7 @@ BEGIN
     DEALLOCATE procesesCursor;
 
 END
-go
+
+GO
+
 

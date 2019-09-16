@@ -84,5 +84,3 @@ BEGIN
 	  PRO.NUMERO,
 	  PRD.NUMERO_RPI
 END
-go
-
