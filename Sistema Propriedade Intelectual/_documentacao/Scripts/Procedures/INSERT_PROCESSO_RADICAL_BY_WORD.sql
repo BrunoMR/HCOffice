@@ -3,57 +3,40 @@
 -- Create date: 28/10/2017
 -- Description:	Este procedimento irá criar os radicais substituindo 1 e 2 caracteres da palavra
 -- =============================================
-CREATE PROCEDURE [dbo].[INSERT_PROCESSO_RADICAL_BY_WORD]
+ALTER PROCEDURE [dbo].[INSERT_PROCESSO_RADICAL_BY_WORD]
   @processoNumero VARCHAR(20),
   @word NVARCHAR(MAX),
   @withPreffixAndSuffix BIT,
-  @justMainTerm BIT,
-  @theFullMainTerm BIT,
-  @cutTerm BIT
+  @justMainTerm BIT
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-    DECLARE
-        @processoRadical dbo.PROCESSORADICALTYPE
+    CREATE TABLE #PROCESSO_RADICAL
+    (
+      NUMERO_PROCESSO VARCHAR(20) NOT NULL,
+      RADICAL NVARCHAR(2000) NOT NULL,
+      LENGTH_RADICAL INT NOT NULL,
+      MAIN BIT NOT NULL
+    )
 
   DECLARE
     @lengthWord INT = LEN(@word),
     @amountCharacters INT
 
-  IF (@theFullMainTerm = 1)
-  BEGIN
-    -- Insert the full main term term as
-    INSERT INTO @processoRadical
-    (
-      NUMERO_PROCESSO,
-      RADICAL,
-      LENGTH_RADICAL,
-      ID_TIPO_PROCESSO_RADICAL
-    )
-    SELECT
-      @processoNumero,
-      @word,
-      @lengthWord,
-	  dbo.GetRadicalType('Completo')
-
-  END
-  ELSE
-  BEGIN
   -- Insert the full term as main
-	  INSERT INTO @processoRadical
-	  (
-		NUMERO_PROCESSO,
-		RADICAL,
-		LENGTH_RADICAL,
-		ID_TIPO_PROCESSO_RADICAL
-	  )
-	  SELECT
-		@processoNumero,
-		@word,
-		@lengthWord,
-		dbo.GetRadicalType('Principais')
-  ENd
+  INSERT INTO #PROCESSO_RADICAL
+  (
+    NUMERO_PROCESSO,
+    RADICAL,
+    LENGTH_RADICAL,
+    MAIN
+  )
+  SELECT
+    @processoNumero,
+    @word,
+    @lengthWord,
+    1
 
   IF (@withPreffixAndSuffix = 1)
     BEGIN
@@ -62,135 +45,135 @@ BEGIN
       SELECT
         @amountCharacters =
           CASE
-			WHEN (@lengthWord <= 6)
-			  THEN
-			    3
-            WHEN (@lengthWord > 6 AND @lengthWord <= 9)
+            WHEN @lengthWord = 3
+              THEN
+                2
+            WHEN (@lengthWord >= 4 AND @lengthWord <= 6)
+              THEN
+                3
+            WHEN (@lengthWord >= 7 AND @lengthWord <= 9)
+              THEN
+                4
+            WHEN (@lengthWord >= 10 AND @lengthWord <= 12)
+              THEN
+                4
+            WHEN (@lengthWord >= 13 AND @lengthWord <= 16)
               THEN
                 5
-            WHEN (@lengthWord >= 10 AND @lengthWord <= 11)
+            WHEN (@lengthWord >= 17)
               THEN
                 6
-            WHEN (@lengthWord >= 12 AND @lengthWord <= 13)
-              THEN
-                7
-			WHEN (@lengthWord >= 14 AND @lengthWord <= 15)
-              THEN
-                8
-            WHEN (@lengthWord >= 16)
-              THEN
-                9
           END
 
-      INSERT INTO @processoRadical
+      INSERT INTO #PROCESSO_RADICAL
       (
         NUMERO_PROCESSO,
         RADICAL,
         LENGTH_RADICAL,
-        ID_TIPO_PROCESSO_RADICAL
+        MAIN
       )
       SELECT
         @processoNumero,
         LEFT(@word, @amountCharacters),
         @amountCharacters,
-        dbo.GetRadicalType('Principais')
+        1
       UNION
         SELECT
         @processoNumero,
         RIGHT(@word, @amountCharacters),
         @amountCharacters,
-        dbo.GetRadicalType('Principais')
+        1
 
       -- END Make and insert the preffix and suffix
 
     END
 
-  IF (@justMainTerm = 0)
+  IF ((@justMainTerm = 0) AND (@lengthWord > 3))
     BEGIN
 
       DECLARE
-        @replaceExpression NVARCHAR(10),
-        @radical NVARCHAR(2000),
-        @count INT,
-        @end INT,
-        @length INT,
+        @replaceExpression              NVARCHAR(100),
+        @radical                        NVARCHAR(2000),
+        @count                          INT,
+        @end                            INT,
+        @length                         INT,
+        @currentLetter                  NVARCHAR(1),
+		@replaceLetterWithExpression    NVARCHAR(11)
 
-		    @currentLetter NVARCHAR(1),
-		    @replaceLetterWithExpression NVARCHAR(11)
-
-
-      -- IF (LEN(@word) >= 5 AND LEN(@word) <= 6)
-      -- BEGIN
-        -- With one underlines
-        SET @replaceExpression = '_'
-        SELECT
+      -- With one underlines
+      SET @replaceExpression = '_'
+      SELECT
         @count = 1,
         @length = LEN(@replaceExpression)
 
-        WHILE @count <= @lengthWord 
+      SET @end = (LEN(@word) - @length) + 1
+
+        WHILE @count <= @end
           BEGIN
 
-          IF (LTRIM(RTRIM(STUFF(@word, @count, @length, @replaceExpression))) != '_')
-            BEGIN
+            IF (LTRIM(RTRIM(STUFF(@word, @count, @length, @replaceExpression))) != '_')
+              BEGIN
 
 				-- Substituição de caracteres
-				SET @radical = LTRIM(RTRIM(STUFF(@word, @count, @length, @replaceExpression)))
+                SET @radical = LTRIM(RTRIM(STUFF(@word, @count, @length, @replaceExpression)))
+                INSERT INTO #PROCESSO_RADICAL
+                (
+                  NUMERO_PROCESSO,
+                  RADICAL,
+                  LENGTH_RADICAL,
+                  MAIN
+                )
+                SELECT
+                  @processoNumero,
+                  @radical,
+                  LEN(@radical),
+                  0
 
-				INSERT INTO @processoRadical
-				(
-				  NUMERO_PROCESSO,
-				  RADICAL,
-				  LENGTH_RADICAL,
-				  ID_TIPO_PROCESSO_RADICAL
-				)
-				SELECT
-				  @processoNumero,
-				  @radical,
-				  LEN(@radical),
-				  dbo.GetRadicalType('Modificados')
+                SET @radical = NULL
 
-				SET @radical = NULL
-				
 				-- Fim Substituição de caracteres
 
-				
-				-- Increase of characteres
-				
-				IF (@count > 1)
-				BEGIN
 
-					SET @currentLetter = SUBSTRING(@word, @count, @length);
-					SET @replaceLetterWithExpression = @replaceExpression + @currentLetter;
+                -- Increase of characteres
+                IF (@lengthWord > 4)
+                BEGIN
+                    IF (@count > 1)
+                    BEGIN
 
-					SET @radical = STUFF(@word, @count, @length, @replaceLetterWithExpression)
+                        SET @currentLetter = SUBSTRING(@word, @count, @length);
+                        SET @replaceLetterWithExpression = @replaceExpression + @currentLetter;
 
-					INSERT INTO @processoRadical
-					(
-					  NUMERO_PROCESSO,
-					  RADICAL,
-					  LENGTH_RADICAL,
-					  ID_TIPO_PROCESSO_RADICAL
-					)
-					SELECT
-					  @processoNumero,
-					  @radical,
-					  LEN(@radical),
-					  dbo.GetRadicalType('Modificados')
-				  
-					SET @radical = NULL
+                        SET @radical = STUFF(@word, @count, @length, @replaceLetterWithExpression)
 
-				END
-				
-				-- FIM Inclusão de caracteres
-            END
+                        INSERT INTO #PROCESSO_RADICAL
+                        (
+                          NUMERO_PROCESSO,
+                          RADICAL,
+                          LENGTH_RADICAL,
+                          MAIN
+                        )
+                        SELECT
+                          @processoNumero,
+                          @radical,
+                          LEN(@radical),
+                          0
+
+                        SET @radical = NULL
+
+                    END
+                END
+
+
+				-- END Increase of characteres
+              END
 
             SET @count = @count + 1
 
           END
-		  -- Fim With one underlines
+		  -- END With one underlines
       --END
 
-      IF (LEN(@word) > 6)
+      IF (LEN(@word) > 6 OR LEN(@word) = 5)
       BEGIN
 
         -- With two underlines
@@ -199,37 +182,40 @@ BEGIN
           @count = 1,
           @length = LEN(@replaceExpression)
 
-        SET @end = (LEN(@word) - @length) + 1
+        SET @end = LEN(@word) -- (LEN(@word) - @length) + 1
 
-		WHILE @count <= @lengthWord
+        WHILE @count <= @end
           BEGIN
 
             IF (LTRIM(RTRIM(STUFF(@word, @count, @length, @replaceExpression))) != '__')
               BEGIN
-			    
-				-- Substituição de caracteres
-				IF (@count <= @end)
-				BEGIN
-					SET @radical = LTRIM(RTRIM(STUFF(@word, @count, @length, @replaceExpression)))
-					INSERT INTO @processoRadical
-					(
-					  NUMERO_PROCESSO,
-					  RADICAL,
-					  LENGTH_RADICAL,
-					  ID_TIPO_PROCESSO_RADICAL
-					)
-					SELECT
-						@processoNumero,
-						@radical,
-						LEN(@radical),
-						dbo.GetRadicalType('Modificados')
 
-					SET @radical = NULL
-				END
-				
-				-- FIM Substituição de caracteres
-				
-				-- Inclusão de caracteres
+                IF (LEN(@word) != 5)
+                BEGIN
+                    -- Replacemant of characteres
+                    IF (@count <= @end)
+                    BEGIN
+                    SET @radical = LTRIM(RTRIM(STUFF(@word, @count, @length, @replaceExpression)))
+                    INSERT INTO #PROCESSO_RADICAL
+                    (
+                      NUMERO_PROCESSO,
+                      RADICAL,
+                      LENGTH_RADICAL,
+                      MAIN
+                    )
+                    SELECT
+                        @processoNumero,
+                        @radical,
+                        LEN(@radical),
+                        0
+    
+                        SET @radical = NULL
+                    END
+    
+                    -- END replacemant of characteres    
+                END
+                
+				-- Increase of characteres
 
 				IF (@count > 1)
 				BEGIN
@@ -237,58 +223,35 @@ BEGIN
 				  SET @currentLetter = SUBSTRING(@word, @count, @length);
 				  SET @replaceLetterWithExpression = @replaceExpression + @currentLetter;
 				  SET @radical = STUFF(@word, @count, 1, @replaceLetterWithExpression);
-				
-				  INSERT INTO @processoRadical
+
+				  INSERT INTO #PROCESSO_RADICAL
 				  (
 					NUMERO_PROCESSO,
 					RADICAL,
 					LENGTH_RADICAL,
-					ID_TIPO_PROCESSO_RADICAL
+					MAIN
 				  )
 				  SELECT
 					@processoNumero,
 					@radical,
 					LEN(@radical),
-					dbo.GetRadicalType('Modificados')
+					0
 
-				  SET @radical = NULL
+                SET @radical = NULL
 
 				END
-				  
-				-- FIM Inclusão de caracteres
-				  
+
+				-- END Increase of characteres
+
               END
-			  
+
             SET @count = @count + 1
 
           END
-		  
-		-- Fim With two underlines
+
+		-- End With two underlines
 
       END
-
-    END
-
-	IF (@cutTerm = 1)
-	  BEGIN
-
-	    INSERT INTO @processoRadical
-        (
-					NUMERO_PROCESSO,
-					RADICAL,
-					LENGTH_RADICAL,
-					ID_TIPO_PROCESSO_RADICAL
-        )
-      SELECT
-        @processoNumero,
-        Term,
-        LEN(Term),
-        dbo.GetRadicalType('Cortados')
-      FROM
-        GetRadicalSizesByAmountCharacteres(@word)
-        CROSS APPLY SplitStringByAmountCharacteres(@word, Size)
-      WHERE
-        Size = LEN(Term)
 
     END
 
@@ -297,15 +260,17 @@ BEGIN
     NUMERO_PROCESSO,
     RADICAL,
     LENGTH_RADICAL,
-    ID_TIPO_PROCESSO_RADICAL
+    MAIN
   )
   SELECT
+    DISTINCT
     NUMERO_PROCESSO,
     RADICAL,
     LENGTH_RADICAL,
-    ID_TIPO_PROCESSO_RADICAL
+    MAIN
   FROM
-    @processoRadical
+    #PROCESSO_RADICAL
 
 END
-GO
+go
+

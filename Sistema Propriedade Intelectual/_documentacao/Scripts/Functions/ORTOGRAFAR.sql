@@ -1,8 +1,8 @@
-CREATE FUNCTION [dbo].[ORTOGRAFAR](@marca VARCHAR(2000))
-RETURNS VARCHAR(2000)
+CREATE FUNCTION [dbo].[ORTOGRAFAR](@marca VARCHAR(255))
+RETURNS VARCHAR(255)
 BEGIN
    DECLARE
-      @marcaOrtografada VARCHAR(2000),
+      @marcaOrtografada VARCHAR(255),
       @index INT
 
    SET @marcaOrtografada = upper(@marca);
