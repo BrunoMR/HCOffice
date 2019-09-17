@@ -1,31 +1,32 @@
 -- =============================================
 -- Author:		Bruno Machado Rodrigues
--- Create date: 28/10/2017
--- Description:	Este procedimento irá criar os radicais substituindo 1 e 2 caracteres da palavra
+-- Create date: 17/09/2019
+-- Description:	Este procedimento irá criar os radicais substituindo e incluíndo 1 e 2 caracteres da palavra
 -- =============================================
-ALTER PROCEDURE [dbo].[INSERT_PROCESSO_RADICAL_BY_WORD]
-  @processoNumero VARCHAR(20),
-  @word NVARCHAR(MAX),
-  @withPreffixAndSuffix BIT,
-  @justMainTerm BIT
+CREATE FUNCTION dbo.RadicalsProcessByWord
+(
+    @processoNumero VARCHAR(20),
+    @word NVARCHAR(255),
+    @withPreffixAndSuffix BIT,
+    @justMainTerm BIT
+)
+RETURNS @output TABLE
+    (
+        NUMERO_PROCESSO     VARCHAR(20) NOT NULL,
+        RADICAL             NVARCHAR(255) NOT NULL,
+        LENGTH_RADICAL      INT NOT NULL,
+        MAIN                BIT NOT NULL
+    )
 AS
 BEGIN
-	SET NOCOUNT ON;
-
-    CREATE TABLE #PROCESSO_RADICAL
-    (
-      NUMERO_PROCESSO VARCHAR(20) NOT NULL,
-      RADICAL NVARCHAR(2000) NOT NULL,
-      LENGTH_RADICAL INT NOT NULL,
-      MAIN BIT NOT NULL
-    )
 
   DECLARE
     @lengthWord INT = LEN(@word),
-    @amountCharacters INT
+    @amountCharacters INT,
+    @radicalProdcess PROCESSORADICALTYPE
 
   -- Insert the full term as main
-  INSERT INTO #PROCESSO_RADICAL
+  INSERT INTO @radicalProdcess
   (
     NUMERO_PROCESSO,
     RADICAL,
@@ -65,7 +66,7 @@ BEGIN
                 6
           END
 
-      INSERT INTO #PROCESSO_RADICAL
+      INSERT INTO @radicalProdcess
       (
         NUMERO_PROCESSO,
         RADICAL,
@@ -116,7 +117,7 @@ BEGIN
 
 				-- Substituição de caracteres
                 SET @radical = LTRIM(RTRIM(STUFF(@word, @count, @length, @replaceExpression)))
-                INSERT INTO #PROCESSO_RADICAL
+                INSERT INTO @radicalProdcess
                 (
                   NUMERO_PROCESSO,
                   RADICAL,
@@ -145,7 +146,7 @@ BEGIN
 
                         SET @radical = STUFF(@word, @count, @length, @replaceLetterWithExpression)
 
-                        INSERT INTO #PROCESSO_RADICAL
+                        INSERT INTO @radicalProdcess
                         (
                           NUMERO_PROCESSO,
                           RADICAL,
@@ -196,7 +197,7 @@ BEGIN
                     IF (@count <= @end)
                     BEGIN
                     SET @radical = LTRIM(RTRIM(STUFF(@word, @count, @length, @replaceExpression)))
-                    INSERT INTO #PROCESSO_RADICAL
+                    INSERT INTO @radicalProdcess
                     (
                       NUMERO_PROCESSO,
                       RADICAL,
@@ -208,13 +209,13 @@ BEGIN
                         @radical,
                         LEN(@radical),
                         0
-    
+
                         SET @radical = NULL
                     END
-    
-                    -- END replacemant of characteres    
+
+                    -- END replacemant of characteres
                 END
-                
+
 				-- Increase of characteres
 
 				IF (@count > 1)
@@ -224,7 +225,7 @@ BEGIN
 				  SET @replaceLetterWithExpression = @replaceExpression + @currentLetter;
 				  SET @radical = STUFF(@word, @count, 1, @replaceLetterWithExpression);
 
-				  INSERT INTO #PROCESSO_RADICAL
+				  INSERT INTO @radicalProdcess
 				  (
 					NUMERO_PROCESSO,
 					RADICAL,
@@ -255,13 +256,8 @@ BEGIN
 
     END
 
-  INSERT INTO PROCESSO_RADICAL
-  (
-    NUMERO_PROCESSO,
-    RADICAL,
-    LENGTH_RADICAL,
-    MAIN
-  )
+  INSERT INTO @output
+  (NUMERO_PROCESSO, RADICAL, LENGTH_RADICAL, MAIN)
   SELECT
     DISTINCT
     NUMERO_PROCESSO,
@@ -269,8 +265,9 @@ BEGIN
     LENGTH_RADICAL,
     MAIN
   FROM
-    #PROCESSO_RADICAL
+    @radicalProdcess
+
+    RETURN
 
 END
 go
-

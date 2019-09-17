@@ -5,7 +5,7 @@ DECLARE
 	SET NOCOUNT ON;
 
 	SET @rpi = 2533
-	SET @fileOfClient = 'D:\Arquivos\Teste_PERFORMANCE Médio.xlsx' --'D:\Guerra.xlsx'
+	SET @fileOfClient = 'D:\Arquivos\Teste_PERFORMANCE Pequeno.xlsx' --'D:\Guerra.xlsx'
 
   --BEGIN TRY
   -- Query Antiga 02/07/2018
@@ -123,90 +123,52 @@ DECLARE
         OR ProprioTerceiro = 'T'
 
 	-- Build the Radicais of CLIENT PROCESSES
-    DECLARE
-      @processNumero VARCHAR(20),
-      @marca NVARCHAR(2000),
-      @marcaOrtografada NVARCHAR(2000)
-
-    DECLARE procesesCursor CURSOR
-      LOCAL FAST_FORWARD
-    FOR SELECT
-          Processo,
-          Marca,
-          MarcaOrtografada
-        FROM
-          CLIENT_PROCESSES
-
-
-    OPEN procesesCursor
-
-    FETCH procesesCursor INTO @processNumero, @marca, @marcaOrtografada;
-
-    WHILE (@@FETCH_STATUS = 0)
-      BEGIN
-
-        -- Build and Insert term by term spelled
-        EXECUTE BUILD_RADICAL_BY_WORD_OF_BRAND
-          @processNumero,
-          @marca,
-          0,
-          1
-
-        -- Insert the word spelled with yours raddicals
-        EXECUTE INSERT_PROCESSO_RADICAL_BY_WORD
-          @processNumero,
-          @marcaOrtografada,
-          0,
-          0
-
-        FETCH procesesCursor INTO @processNumero, @marca, @marcaOrtografada;
-      END
-
-     CLOSE procesesCursor;
-     DEALLOCATE procesesCursor;
-    --END Build the Radicais of CLIENT PROCESSES
-
-
     -- Build the Radicais of RPI PROCESSES
-    DECLARE
-      @processNumero2 VARCHAR(20),
-      @marca2 NVARCHAR(2000),
-      @marcaOrtografada2 NVARCHAR(2000)
 
-    DECLARE procesesCursor2 CURSOR
-      LOCAL FAST_FORWARD
-    FOR SELECT
-          NUMERO,
-          MARCA,
-          MARCA_ORTOGRAFADA
-        FROM
-          PROCESS_TO_COLLIDE
+    INSERT into PROCESSO_RADICAL
+    (NUMERO_PROCESSO, RADICAL, LENGTH_RADICAL, MAIN)
+    SELECT
+        RAD.NUMERO_PROCESSO,
+        RAD.RADICAL,
+        RAD.LENGTH_RADICAL,
+        RAD.MAIN
+    FROM
+        CLIENT_PROCESSES    CLI
+        cross apply dbo.RadicalsProcessByWord(Processo, MarcaOrtografada, 0, 0) RAD
+    UNION
 
-    OPEN procesesCursor2
+    SELECT
+        RAD.NUMERO_PROCESSO,
+        RAD.RADICAL,
+        RAD.LENGTH_RADICAL,
+        RAD.MAIN
+    FROM
+        CLIENT_PROCESSES    CLI
+        cross apply dbo.BuildBrandRadicalsByWord(Processo, Marca, 0, 1) RAD
 
-    FETCH procesesCursor2 INTO @processNumero2, @marca2, @marcaOrtografada2;
+    UNION
 
-    WHILE (@@FETCH_STATUS = 0)
-      BEGIN
+    SELECT
+        RAD.NUMERO_PROCESSO,
+        RAD.RADICAL,
+        RAD.LENGTH_RADICAL,
+        RAD.MAIN
+    FROM
+        PROCESS_TO_COLLIDE PRO
+        cross apply dbo.RadicalsProcessByWord(PRO.NUMERO, PRO.MARCA_ORTOGRAFADA, 0, 0) RAD
 
-        EXECUTE BUILD_RADICAL_BY_WORD_OF_BRAND
-          @processNumero2,
-          @marca2,
-          0,
-          1
+    UNION
 
-        -- Insert the word spelled with yours raddicals
-        EXECUTE INSERT_PROCESSO_RADICAL_BY_WORD
-          @processNumero2,
-          @marcaOrtografada2,
-          0,
-          0
+    SELECT
+        RAD.NUMERO_PROCESSO,
+        RAD.RADICAL,
+        RAD.LENGTH_RADICAL,
+        RAD.MAIN
+    FROM
+        PROCESS_TO_COLLIDE PRO
+        cross apply dbo.BuildBrandRadicalsByWord(PRO.NUMERO, PRO.MARCA, 0, 1) RAD
 
-        FETCH procesesCursor2 INTO @processNumero2, @marca2, @marcaOrtografada2;
-      END
-
-    CLOSE procesesCursor2;
-    DEALLOCATE procesesCursor2;
+    --END Build the Radicais of CLIENT PROCESSES
     --END Build the Radicais of RPI PROCESSES
 
     SELECT
@@ -217,11 +179,6 @@ DECLARE
     FROM
       CLIENT_PROCESSES CLP
       CROSS APPLY dbo.FormatClassesFromFile(CLP.Classe) AS CLA
-
-
-
-
-
 
 
     -- Build the client to collide
