@@ -5,7 +5,7 @@ DECLARE
 	SET NOCOUNT ON;
 
 	SET @rpi = 2533
-	SET @fileOfClient = 'D:\Arquivos\Teste_PERFORMANCE Pequeno.xlsx' --'D:\Guerra.xlsx'
+	SET @fileOfClient = 'D:\Arquivos\Teste_PERFORMANCE Médio.xlsx' --'D:\Guerra.xlsx'
 
   --BEGIN TRY
   -- Query Antiga 02/07/2018
@@ -358,59 +358,48 @@ DECLARE
         JOIN PROCESS_TO_COLLIDE_FULL    PRO ON PRO.LENGTH_RADICAL >= CLI.LengthRadical
                     AND
                     (
-                       (
-                         CLI.LengthRadical = PRO.LENGTH_RADICAL
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 8
-                         --CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 12
-                         CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 6
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 11
-                         --CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 16
-                         CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 8
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 14
-                         --CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 20
-                         CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 10
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 17
-                         --CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 20
-                         CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 12
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 20
-                         --CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 30
-                         CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 14
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 23
-                         --CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 30
-                         CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 16
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL <= 26
-                         --CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL <= 30
-                         CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL <= 18
-                       )
-                    )
-                    AND
-                    (
-                      PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = CLI.RADICAL
-                      OR
-                      PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE CLI.RADICAL + '%'
-                      OR
-                      PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + CLI.RADICAL
+                        (
+                            CLI.LengthRadical = PRO.LENGTH_RADICAL
+                            AND
+                            PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = CLI.RADICAL
+                        )
+
+                        OR
+                        (
+                            (
+                                CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 6
+                            )
+                            OR
+                            (
+                                CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 8
+                                )
+                            OR
+                            (
+                                CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 10
+                                )
+                            OR
+                            (
+                                CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 12
+                                )
+                            OR
+                            (
+                                CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 14
+                                )
+                            OR
+                            (
+                                CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 16
+                                )
+                            OR
+                            (
+                                CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL >= 17
+                            )
+                            AND
+                            (
+                                PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE CLI.RADICAL + '%'
+                                OR
+                                PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + CLI.RADICAL
+                            )
+                        )
                     )
         JOIN CLASSE_AFINIDADE CLF ON CLF.NUMERO_CLASSE_A = CLI.class
                                    AND CLF.NUMERO_CLASSE_B = COALESCE(PRO.CLASSE_1, PRO.CLASSE_INTERNACIONAL)
@@ -457,68 +446,51 @@ DECLARE
                     (
                        (
                          CLI.LengthRadical = PRO.LENGTH_RADICAL
+                         AND
+                         PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE CLI.RADICAL
                        )
                        OR
                        (
-                         --CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 8
-                         --CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 12
-                         CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 6
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 11
-                         --CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 16
-                         CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 8
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 14
-                         --CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 20
-                         CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 10
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 17
-                         --CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 20
-                         CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 12
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 20
-                         --CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 30
-                         CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 14
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 23
-                         --CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 30
-                         CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 16
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL <= 26
-                         --CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL <= 30
-                         CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL <= 18
-                       )
-                    )
-                    AND
-                    (
-                      (
-                         CLI.LengthRadical < 6
-                         AND PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE CLI.RADICAL
-                       )
-                       OR
-                       (
-                         CLI.LengthRadical >= 6
-                         AND PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + CLI.RADICAL + '%'
-                       )
+                           (
+                             CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 6
+                           )
+                           OR
+                           (
+                             CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 8
+                           )
+                           OR
+                           (
+                             CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 10
+                           )
+                           OR
+                           (
+                             CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 12
+                           )
+                           OR
+                           (
+                             CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 14
+                           )
+                           OR
+                           (
+                             CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 16
+                           )
+                           OR
+                           (
+                             CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL >= 17
+                           )
+                           AND
+                           (
+                             CLI.LengthRadical >= 6
+                             AND PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + CLI.RADICAL + '%'
+                           )
+                        )
                     )
         JOIN CLASSE_AFINIDADE CLF ON CLF.NUMERO_CLASSE_A = CLI.class
                                    AND CLF.NUMERO_CLASSE_B = COALESCE(PRO.CLASSE_1, PRO.CLASSE_INTERNACIONAL)
     WHERE
         CLI.Main = 0
         AND CLI.LengthRadical > 1
-        AND PRO.Main = 0
+        AND PRO.Main = 1
         AND PRO.LENGTH_RADICAL > 1
 
 
@@ -560,57 +532,45 @@ DECLARE
                     (
                        (
                          PRO.LENGTH_RADICAL = CLI.LengthRadical
+                         AND
+                         CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = PRO.RADICAL
                        )
-					             OR
+					   OR
                        (
-                         --CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 8
-                         --CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 12
-                         CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 6
+                           (
+                             PRO.LENGTH_RADICAL = 3 AND  CLI.LengthRadical <= 6
+                           )
+                           OR
+                           (
+                            PRO.LENGTH_RADICAL = 4 AND  CLI.LengthRadical <= 8
+                           )
+                           OR
+                           (
+                             PRO.LENGTH_RADICAL = 5 AND  CLI.LengthRadical <= 10
+                           )
+                           OR
+                           (
+                              PRO.LENGTH_RADICAL = 6 AND  CLI.LengthRadical <= 12
+                           )
+                           OR
+                           (
+                              PRO.LENGTH_RADICAL = 7 AND  CLI.LengthRadical <= 14
+                           )
+                           OR
+                           (
+                              PRO.LENGTH_RADICAL = 8 AND  CLI.LengthRadical <= 16
+                           )
+                           OR
+                           (
+                              PRO.LENGTH_RADICAL = 9 AND  CLI.LengthRadical >= 17
+                           )
+                           AND
+                            (
+                              CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE PRO.RADICAL + '%'
+                              OR
+                              CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + PRO.RADICAL
+                            )
                        )
-                       OR
-                       (
-                         --CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 11
-                         --CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 16
-                         CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 8
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 14
-                         --CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 20
-                         CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 10
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 17
-                         --CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 20
-                         CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 12
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 20
-                         --CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 30
-                         CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 14
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 23
-                         --CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 30
-                         CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 16
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL <= 26
-                         --CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL <= 30
-                         CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL <= 18
-                       )
-                    )
-                    AND
-                    (
-                      CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = PRO.RADICAL
-                      OR
-                      CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE PRO.RADICAL + '%'
-                      OR
-                      CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + PRO.RADICAL
                     )
       JOIN CLASSE_AFINIDADE CLF ON CLF.NUMERO_CLASSE_A = COALESCE(PRO.CLASSE_1, PRO.CLASSE_INTERNACIONAL)
                                    AND CLF.NUMERO_CLASSE_B = CLI.class
@@ -655,70 +615,58 @@ DECLARE
                     AND
                     (
                        (
-                         PRO.LENGTH_RADICAL = CLI.LengthRadical
+                            PRO.LENGTH_RADICAL = CLI.LengthRadical
+                            AND
+                            CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE PRO.RADICAL
                        )
                        OR
                        (
-                         --CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 8
-                         --CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 12
-                         CLI.LengthRadical = 3 AND PRO.LENGTH_RADICAL <= 6
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 11
-                         --CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 16
-                         CLI.LengthRadical = 4 AND PRO.LENGTH_RADICAL <= 8
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 14
-                         --CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 20
-                         CLI.LengthRadical = 5 AND PRO.LENGTH_RADICAL <= 10
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 17
-                         --CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 20
-                         CLI.LengthRadical = 6 AND PRO.LENGTH_RADICAL <= 12
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 20
-                         --CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 30
-                         CLI.LengthRadical = 7 AND PRO.LENGTH_RADICAL <= 14
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 23
-                         --CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 30
-                         CLI.LengthRadical = 8 AND PRO.LENGTH_RADICAL <= 16
-                       )
-                       OR
-                       (
-                         --CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL <= 26
-                         --CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL <= 30
-                         CLI.LengthRadical = 9 AND PRO.LENGTH_RADICAL <= 18
+                           (
+                             PRO.LENGTH_RADICAL = 3 AND  CLI.LengthRadical <= 6
+                           )
+                           OR
+                           (
+                            PRO.LENGTH_RADICAL = 4 AND  CLI.LengthRadical <= 8
+                           )
+                           OR
+                           (
+                             PRO.LENGTH_RADICAL = 5 AND  CLI.LengthRadical <= 10
+                           )
+                           OR
+                           (
+                              PRO.LENGTH_RADICAL = 6 AND  CLI.LengthRadical <= 12
+                           )
+                           OR
+                           (
+                              PRO.LENGTH_RADICAL = 7 AND  CLI.LengthRadical <= 14
+                           )
+                           OR
+                           (
+                              PRO.LENGTH_RADICAL = 8 AND  CLI.LengthRadical <= 16
+                           )
+                           OR
+                           (
+                              PRO.LENGTH_RADICAL = 9 AND  CLI.LengthRadical >= 17
+                           )
+                           AND (
+                               (
+                                 PRO.LENGTH_RADICAL < 7
+                                 AND CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE PRO.RADICAL
+                               )
+                               OR
+                               (
+                                 CLI.LengthRadical >= 7
+                                 AND CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + PRO.RADICAL + '%'
+                               )
+                            )
                        )
                     )
-                    AND (
-                            CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE PRO.RADICAL
-                           OR
-                           (
-                             PRO.LENGTH_RADICAL < 7
-                             AND CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE PRO.RADICAL
-                           )
-                           OR
-                           (
-                             CLI.LengthRadical >= 7
-                             AND CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + PRO.RADICAL + '%'
-                           )
-                        )
       JOIN CLASSE_AFINIDADE CLF ON CLF.NUMERO_CLASSE_A = COALESCE(PRO.CLASSE_1, PRO.CLASSE_INTERNACIONAL)
                                    AND CLF.NUMERO_CLASSE_B = CLI.class
     where
         PRO.Main = 0
         AND PRO.LENGTH_RADICAL > 1
-        AND CLI.Main = 0
+        AND CLI.Main = 1
         AND CLI.LengthRadical > 1
 
 
