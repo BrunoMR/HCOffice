@@ -1,8 +1,7 @@
 create table CLIENT_PROCESSES
 (
-    ID               int identity
-        primary key nonclustered,
-    ProprioTerceiro  nvarchar(255),
+    ID               int identity primary key nonclustered,
+    ProprioTerceiro  nvarchar(255) INDEX [CLIENT_PROCESS] NONCLUSTERED ,
     Processo         varchar(100),
     Marca            varchar(255),
     MarcaOrtografada varchar(255),
@@ -10,7 +9,7 @@ create table CLIENT_PROCESSES
     Classe           varchar(100),
     Deposito         varchar(30),
     Concessao        varchar(30),
-    Especificacao    varchar(1000),
+    Especificacao    varchar(max),
     Titular          varchar(255),
     Pasta            varchar(1000),
     Responsavel      varchar(255),
