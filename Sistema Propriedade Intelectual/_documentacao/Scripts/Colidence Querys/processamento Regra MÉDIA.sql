@@ -65,7 +65,7 @@ DECLARE
 		  CONVERT(VARCHAR, dbo.RemoveFirstCharacter(CLI.[CONCESSÃO]), 103)			                AS Concessao,
 		  REPLACE(
                 REPLACE(
-                    REPLACE(dbo.RemoveFirstCharacter(CLI.[ESPECIFICAÇÃO]),
+                    REPLACE(CONVERT(VARCHAR(max), CLI.[ESPECIFICAÇÃO]),
                         CHAR(13) + Char(10) ,'' ''),
                     CHAR(10), '' ''),
             ''  '', '' '')							                                                AS Especificacao,
@@ -416,11 +416,8 @@ DECLARE
         AND PRO.Main = 1
         AND PRO.LengthRadical > 1
 
+    UNION
 
-    INSERT INTO #COLLIDED_PROCESS
-    (ID_PROCESSO, [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
-     [Especificação dos Produtos/Serviços(Cliente)], [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, [Data Depósito], [Data Concessão], Processo, Titular,
-     Procurador)
     SELECT
         DISTINCT
         PRO.IdProcesso,
@@ -519,10 +516,8 @@ DECLARE
 
     -- Radicais da RPI contidos no do cliente
 
-    INSERT INTO #COLLIDED_PROCESS
-    (ID_PROCESSO, [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
-     [Especificação dos Produtos/Serviços(Cliente)], [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, [Data Depósito], [Data Concessão], Processo, Titular,
-     Procurador)
+    UNION
+
     SELECT
         DISTINCT
         PRO.IdProcesso,
@@ -614,10 +609,8 @@ DECLARE
         AND CLI.Main = 1
         AND CLI.LengthRadical > 1
 
-    INSERT INTO #COLLIDED_PROCESS
-    (ID_PROCESSO, [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
-     [Especificação dos Produtos/Serviços(Cliente)], [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, [Data Depósito], [Data Concessão], Processo, Titular,
-     Procurador)
+    UNION
+
     SELECT
         DISTINCT
         PRO.IdProcesso,
