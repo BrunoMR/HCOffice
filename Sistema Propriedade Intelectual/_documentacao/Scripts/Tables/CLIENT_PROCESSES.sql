@@ -1,8 +1,8 @@
 create table CLIENT_PROCESSES
 (
     ID               int identity primary key nonclustered,
-    ProprioTerceiro  nvarchar(255) INDEX [CLIENT_PROCESS] NONCLUSTERED ,
-    Processo         varchar(100),
+    ProprioTerceiro  nvarchar(255),
+    Processo         varchar(100) INDEX [CLIENT_PROCESS] NONCLUSTERED,
     Marca            varchar(255),
     MarcaOrtografada varchar(255),
     MarcaSemVogais   varchar(100),
