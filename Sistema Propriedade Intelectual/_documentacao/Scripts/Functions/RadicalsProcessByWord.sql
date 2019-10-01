@@ -3,7 +3,7 @@
 -- Create date: 17/09/2019
 -- Description:	Este procedimento irá criar os radicais substituindo e incluíndo 1 e 2 caracteres da palavra
 -- =============================================
-CREATE FUNCTION dbo.RadicalsProcessByWord
+ALTER FUNCTION dbo.RadicalsProcessByWord
 (
     @processoNumero VARCHAR(20),
     @word NVARCHAR(255),
@@ -89,7 +89,7 @@ BEGIN
 
     END
 
-  IF ((@justMainTerm = 0) AND (@lengthWord > 3))
+  IF ((@justMainTerm = 0) AND (@lengthWord > 4))
     BEGIN
 
       DECLARE
