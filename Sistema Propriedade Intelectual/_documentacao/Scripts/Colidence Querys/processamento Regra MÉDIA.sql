@@ -180,7 +180,6 @@ DECLARE
       CLIENT_PROCESSES CLP
       CROSS APPLY dbo.FormatClassesFromFile(CLP.Classe) AS CLA
 
-
     -- Build the client to collide
 
     INSERT INTO CLIENT_TO_COLLIDE
@@ -778,3 +777,48 @@ DECLARE
 
 	 --CTRL + K + U
 	 --CTRL + K + C
+
+
+
+
+
+SELECT
+    RAD.NUMERO_PROCESSO,
+    RAD.RADICAL,
+    RAD.LENGTH_RADICAL,
+    RAD.MAIN
+FROM
+    PROCESS_TO_COLLIDE PRO
+    cross apply dbo.BuildBrandRadicalsByWord(PRO.NUMERO, PRO.MARCA, 0, 1) RAD
+
+
+SELECT
+--     RAD.NUMERO_PROCESSO,
+--     RAD.RADICAL,
+--     RAD.LENGTH_RADICAL,
+--     RAD.MAIN
+PRO.NUMERO,
+PRO.MARCA, *
+FROM
+    PROCESS_TO_COLLIDE PRO
+--     cross apply dbo.BuildBrandRadicalsByWord(PRO.NUMERO, PRO.MARCA, 0, 1) RAD
+where
+   len(pro.MARCA) > 30
+order by
+    CLASSE_INTERNACIONAL,
+    len(PRO.MARCA) desc
+
+
+SELECT
+--     RAD.NUMERO_PROCESSO,
+--     RAD.RADICAL,
+--     RAD.LENGTH_RADICAL,
+--     RAD.MAIN
+PRO.NUMERO,
+PRO.MARCA, *
+FROM
+    PROCESS_TO_COLLIDE PRO
+--     cross apply dbo.BuildBrandRadicalsByWord(PRO.NUMERO, PRO.MARCA, 0, 1) RAD
+where
+   pro.MARCA like '%cosm[aeiou]t%'
+

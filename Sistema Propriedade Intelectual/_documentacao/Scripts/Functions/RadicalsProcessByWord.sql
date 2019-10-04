@@ -93,13 +93,13 @@ BEGIN
     BEGIN
 
       DECLARE
-        @replaceExpression              NVARCHAR(100),
-        @radical                        NVARCHAR(2000),
+        @replaceExpression              VARCHAR(100),
+        @radical                        VARCHAR(255),
         @count                          INT,
         @end                            INT,
         @length                         INT,
-        @currentLetter                  NVARCHAR(1),
-		@replaceLetterWithExpression    NVARCHAR(11)
+        @currentLetter                  VARCHAR(1),
+		@replaceLetterWithExpression    VARCHAR(11)
 
       -- With one underlines
       SET @replaceExpression = '_'
@@ -271,3 +271,19 @@ BEGIN
 
 END
 go
+
+
+SELECT PATINDEX('%[a]%', 'interesting data termome');
+SELECT CHARINDEX('%[a]%', 'interesting data termome');
+SELECT STUFF('bruno', 1, 2, 'teste');
+
+SELECT replace('bruno', '%[aeiou]%', '[1-9]');
+
+SELECT dbo.ReplaceRegexForRegex('bruno', '%[aeiou]%', '[1-9]');
+
+select dbo.REGEX_IN_THE_WHOLE_WORD('[aeiou]', 'bruno', 0, 1, 'sssss', null)
+
+
+
+SELECT value FROM STRING_SPLIT('Lorem ipsum dolor sit amet.', 'a');
+SELECT value FROM STRING_SPLIT('Lorem ipsum dolor sit amet.', ' ');
