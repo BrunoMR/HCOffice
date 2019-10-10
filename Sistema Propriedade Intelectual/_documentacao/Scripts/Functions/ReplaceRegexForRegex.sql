@@ -1,39 +1,66 @@
--- CREATE FUNCTION dbo.ReplaceRegexForRegex
--- (
-declare
-  @regex                VARCHAR(100) = '[aeiou]',
-  @word                 VARCHAR(255) = 'bruno',
-  @expressionToChange   VARCHAR(100) = '[aeiou]'
--- )
--- RETURNS VARCHAR(255)
--- AS
--- BEGIN
+CREATE FUNCTION dbo.ReplaceRegexForRegex
+(
+  @regex                            VARCHAR(100),
+  @word                             VARCHAR(255),
+  @expressionToChange               VARCHAR(100)
+)
+RETURNS VARCHAR(255)
+AS
+BEGIN
 
     DECLARE
-        @indexToChange INT = PATINDEX('%' + @regex + '%', @word),
-        @isSame BIT = 0
+        @expressionToChangeIfIsTheSame  VARCHAR(100) = '*',
+        @indexToChange                  INT = PATINDEX('%' + @regex + '%', @word),
+        @isSame                         BIT = 0,
+        @count                          INT = 1,
+        @amountIndex                    INT = 0,
+        @lengthToChange                 INT = (LEN(@expressionToChange) - 1)
 
     IF (@regex = @expressionToChange)
         SET @isSame = 1
 
-    select @isSame [@isSame]
-
     DECLARE
-        @index AS TABLE (Id INT IDENTITY(1, 1), IndexRegex INT)
-
-   select @indexToChange [@indexToChange]
+        @index AS TABLE (Id INT IDENTITY(1, 1), RegexIndex INT)
 
     WHILE @indexToChange > 0
     BEGIN
-        SET @word = STUFF(@word, @indexToChange, 1, @expressionToChange)
-        SET @indexToChange = PATINDEX(@regex, @word)
+        insert into @index values (@indexToChange)
 
---         select
---            @word [@word],
---            @indexToChange [@indexToChange]
+        IF(@isSame = 1)
+            SET @word = STUFF(@word, @indexToChange, 1, @expressionToChangeIfIsTheSame)
+        ELSE
+            SET @word = STUFF(@word, @indexToChange, 1, @expressionToChange)
+
+        SET @indexToChange = PATINDEX('%' + @expressionToChange + '%', @word)
+
     END
 
-    select @word [@word]
---   RETURN @word
--- END
--- go
+    IF exists(select 1 from @index)
+    BEGIN
+        SET @amountIndex = (select COUNT(1) from @index)
+        SET @indexToChange = 0
+
+        WHILE @count <= @amountIndex
+        BEGIN
+            select
+                @indexToChange = case Id
+                                    when 1
+                                        then
+                                            RegexIndex
+                                    else
+                                        (@lengthToChange * (Id -1) + RegexIndex)
+                                end
+            from
+                @index
+            where
+                Id = @count
+
+            SET @word = STUFF(@word, @indexToChange, 1, @expressionToChange)
+            SET @count = @count + 1
+
+        END
+    END
+
+  RETURN @word
+END
+go
