@@ -2,6 +2,11 @@
 -- Author:		Bruno Machado Rodrigues
 -- Create date: 17/09/2019
 -- Description:	Este procedimento irá criar os radicais substituindo e incluíndo 1 e 2 caracteres da palavra
+-- Ex:
+-- select
+--     *
+-- from
+--     dbo.RadicalsProcessByWord('123456789', 'bruno', 0, 0)
 -- =============================================
 ALTER FUNCTION dbo.RadicalsProcessByWord
 (
@@ -87,6 +92,22 @@ BEGIN
 
       -- END Make and insert the preffix and suffix
 
+    END
+
+  IF ((@justMainTerm = 0) AND (@lengthWord = 4))
+    BEGIN
+        INSERT INTO @radicalProdcess
+        (
+          NUMERO_PROCESSO,
+          RADICAL,
+          LENGTH_RADICAL,
+          MAIN
+        )
+        SELECT
+          @processoNumero,
+          dbo.ReplaceRegexForRegex('[aeiou]', @word, '[aeiou]'),
+          LEN(@word),
+          0
     END
 
   IF ((@justMainTerm = 0) AND (@lengthWord > 4))
@@ -271,19 +292,3 @@ BEGIN
 
 END
 go
-
-
-SELECT PATINDEX('%[a]%', 'interesting data termome');
-SELECT CHARINDEX('%[a]%', 'interesting data termome');
-SELECT STUFF('bruno', 1, 2, 'teste');
-
-SELECT replace('bruno', '%[aeiou]%', '[1-9]');
-
-SELECT dbo.ReplaceRegexForRegex('bruno', '%[aeiou]%', '[1-9]');
-
-select dbo.REGEX_IN_THE_WHOLE_WORD('[aeiou]', 'bruno', 0, 1, 'sssss', null)
-
-
-
-SELECT value FROM STRING_SPLIT('Lorem ipsum dolor sit amet.', 'a');
-SELECT value FROM STRING_SPLIT('Lorem ipsum dolor sit amet.', ' ');

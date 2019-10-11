@@ -1,3 +1,10 @@
+-- =============================================
+-- Author:		Bruno Machado Rodrigues
+-- Create date: 05/10/2019
+-- Description:	Este procedimento irá substituir o padrão regex encontrado na palavra enviada por outro padrão regex
+-- Ex:
+-- SELECT dbo.ReplaceRegexForRegex('[aeiou]', 'cristiano', '[aeiou]')
+-- =============================================
 CREATE FUNCTION dbo.ReplaceRegexForRegex
 (
   @regex                            VARCHAR(100),
