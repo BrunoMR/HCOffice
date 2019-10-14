@@ -1,11 +1,11 @@
 -- =============================================
 -- Author:		Bruno Machado Rodrigues
 -- Create date: 05/10/2019
--- Description:	Este procedimento ir· substituir o padr„o regex encontrado na palavra enviada por outro padr„o regex
+-- Description:	Este procedimento ir√° substituir o padr√£o regex encontrado na palavra enviada por outro padr√£o regex
 -- Ex:
 -- SELECT dbo.ReplaceRegexForRegex('[aeiou]', 'cristiano', '[aeiou]')
 -- =============================================
-CREATE FUNCTION dbo.ReplaceRegexForRegex
+ALTER FUNCTION dbo.ReplaceRegexForRegex
 (
   @regex                            VARCHAR(100),
   @word                             VARCHAR(255),
@@ -38,7 +38,7 @@ BEGIN
         ELSE
             SET @word = STUFF(@word, @indexToChange, 1, @expressionToChange)
 
-        SET @indexToChange = PATINDEX('%' + @expressionToChange + '%', @word)
+        SET @indexToChange = PATINDEX('%' + @regex + '%', @word)
 
     END
 
