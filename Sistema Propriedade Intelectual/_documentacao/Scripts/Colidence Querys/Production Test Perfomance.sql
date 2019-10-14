@@ -51,13 +51,15 @@ DECLARE
 
 	  SET @sqlExcel = '
       insert into CLIENT_PROCESSES
-      (ProprioTerceiro, Processo, Marca, MarcaOrtografada, MarcaSemVogais, Classe, Deposito, Concessao, Especificacao, Titular, Pasta, Responsavel, Advogado)
+      (ProprioTerceiro, Processo, Marca,
+-- 	                  MarcaOrtografada, MarcaSemVogais,
+	                  Classe, Deposito, Concessao, Especificacao, Titular, Pasta, Responsavel, Advogado)
 	  SELECT
 		  CLI.[P/T]																                    AS ProprioTerceiro,
 		  dbo.RemoveFirstCharacter(CLI.PROCESSO)										            AS Processo,
 		  dbo.RemoveFirstCharacter(CLI.MARCA)											            AS Marca,
-		  dbo.ORTOGRAFAR(dbo.RemoveFirstCharacter(CLI.MARCA))					                    AS MarcaOrtografada,
-          REPLACE(dbo.REMOVER_VOGAIS(dbo.RemoveFirstCharacter(CLI.MARCA)), '' '', '''')             AS MarcaSemVogais,
+-- 		  dbo.ORTOGRAFAR(dbo.RemoveFirstCharacter(CLI.MARCA))					                    AS MarcaOrtografada,
+--           REPLACE(dbo.REMOVER_VOGAIS(dbo.RemoveFirstCharacter(CLI.MARCA)), '' '', '''')             AS MarcaSemVogais,
 		  dbo.RemoveFirstCharacter(CLI.CLASSE)										                AS Classe,
 		  --CONVERT(VARCHAR, CONVERT(DATE, dbo.RemoveFirstCharacter(CLI.[DEPÓSITO])), 103)			AS Deposito,
           --CONVERT(VARCHAR, CONVERT(DATE, dbo.RemoveFirstCharacter(CLI.[CONCESSÃO])), 103)			AS Concessao,
