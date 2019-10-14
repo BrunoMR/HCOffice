@@ -36,7 +36,7 @@ BEGIN
         CROSS APPLY dbo.RadicalsProcessByWord(@processNumber, dbo.ORTOGRAFAR(splitData), @withPreffixAndSuffix, @justMainTerm) RAD
     WHERE
       dbo.ORTOGRAFAR(splitData) IS NOT NULL
-      AND LEN(dbo.ORTOGRAFAR(splitData)) >=5
+      AND LEN(dbo.ORTOGRAFAR(splitData)) > 3
 
     RETURN
 END
