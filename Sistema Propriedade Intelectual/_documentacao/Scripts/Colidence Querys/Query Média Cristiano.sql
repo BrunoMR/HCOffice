@@ -4,8 +4,8 @@ DECLARE
 
 	SET NOCOUNT ON;
 
-	SET @rpi = 2541
-	SET @fileOfClient = 'C:\MarcasRPI\TauilChequer23092019.xlsx' --'D:\Guerra.xlsx'
+	SET @rpi = 2545
+	SET @fileOfClient = 'C:\MarcasRPI\TestePalavraUsoComum.xlsx' --'D:\Guerra.xlsx'
 
   --BEGIN TRY
   -- Query Executa processamento da colidência RPI Azure_New - Regra LONGA
@@ -87,8 +87,8 @@ DECLARE
         PRC.ID_PROCESSO,
         PRO.NUMERO,
         PRO.MARCA,
-        dbo.ORTOGRAFAR(PRO.MARCA) AS MARCA_ORTOGRAFADA,
-        replace(PRO.MARCA_SEM_VOGAIS, ' ', '') AS MARCA_SEM_VOGAIS,
+	    dbo.ORTOGRAFAR(dbo.RemoveCommonWords(PRO.MARCA, ISNULL(PRO.CLASSE_1, PRO.CLASSE_INTERNACIONAL))) AS MARCA_ORTOGRAFADA,
+        replace(dbo.REMOVER_VOGAIS(dbo.RemoveCommonWords(PRO.MARCA, ISNULL(PRO.CLASSE_1, PRO.CLASSE_INTERNACIONAL))), ' ', '') MARCA_SEM_VOGAIS,
         dbo.FormatClasses(PRO.CLASSE_1, PRO.CLASSE_2, PRO.CLASSE_3, PRO.CLASSE_INTERNACIONAL) AS FORMAT_CLASSES,
         PRO.CLASSE_1,
         PRO.CLASSE_INTERNACIONAL,
@@ -122,29 +122,44 @@ DECLARE
         OR Marca = ''
         OR ProprioTerceiro = 'T'
 
+
+    SELECT
+      CLA.class,
+      CLP.Processo,
+      dbo.RemoveCommonWords(CLP.Marca, CLA.class) as marcaOrtografada
+    INTO
+        #CLIENT_PROCESSES_CLASS
+    FROM
+      CLIENT_PROCESSES CLP
+      CROSS APPLY dbo.FormatClassesFromFile(CLP.Classe) AS CLA
+
 	-- Build the Radicais of CLIENT PROCESSES
     -- Build the Radicais of RPI PROCESSES
 
     INSERT into PROCESSO_RADICAL
     (NUMERO_PROCESSO, RADICAL, LENGTH_RADICAL, MAIN)
     SELECT
+        distinct
         RAD.NUMERO_PROCESSO,
         RAD.RADICAL,
         RAD.LENGTH_RADICAL,
         RAD.MAIN
     FROM
         CLIENT_PROCESSES    CLI
-        cross apply dbo.RadicalsProcessByWord(Processo, MarcaOrtografada, 0, 0) RAD
+        JOIN #CLIENT_PROCESSES_CLASS CLA ON CLA.Processo = CLI.Processo
+        cross apply dbo.RadicalsProcessByWord(CLI.Processo, CLA.marcaOrtografada, 0, 0) RAD
     UNION
 
     SELECT
+	    distinct
         RAD.NUMERO_PROCESSO,
         RAD.RADICAL,
         RAD.LENGTH_RADICAL,
         RAD.MAIN
     FROM
         CLIENT_PROCESSES    CLI
-        cross apply dbo.BuildBrandRadicalsByWord(Processo, Marca, 0, 1) RAD
+        JOIN #CLIENT_PROCESSES_CLASS CLA ON CLA.Processo = CLI.Processo
+        cross apply dbo.BuildBrandRadicalsByWord(CLI.Processo, Marca, 0, 1, CLA.class) RAD
 
     UNION
 
@@ -166,19 +181,10 @@ DECLARE
         RAD.MAIN
     FROM
         PROCESS_TO_COLLIDE PRO
-        cross apply dbo.BuildBrandRadicalsByWord(PRO.NUMERO, PRO.MARCA, 0, 1) RAD
+        cross apply dbo.BuildBrandRadicalsByWord(PRO.NUMERO, PRO.MARCA, 0, 1, ISNULL(PRO.CLASSE_1, PRO.CLASSE_INTERNACIONAL)) RAD
 
     --END Build the Radicais of CLIENT PROCESSES
     --END Build the Radicais of RPI PROCESSES
-
-    SELECT
-      CLA.class,
-      CLP.Processo
-    INTO
-        #CLIENT_PROCESSES_CLASS
-    FROM
-      CLIENT_PROCESSES CLP
-      CROSS APPLY dbo.FormatClassesFromFile(CLP.Classe) AS CLA
 
 
     -- Build the client to collide
@@ -246,6 +252,17 @@ DECLARE
 
 	SELECT
       PRC.ID_PROCESSO,
+	  CASE
+	      WHEN ISNULL(PRC.CLASSE_1, PRC.CLASSE_INTERNACIONAL) = CLP.Classe
+	          THEN
+	            1
+	      ELSE
+	          0
+	  END                                         AS [Mesma Classe],
+	  1                                           AS [Quantidade de Radicais],
+	  ''                                          AS [Radical Cliente],
+	  ''                                          AS [Radical Rpi],
+
       1                                           AS [Tipo Colidência],
       PRC.MARCA									  AS [Marca(RPI)],
       CLP.MARCA									  AS [Marca(Cliente)],
@@ -277,12 +294,22 @@ DECLARE
 
 
     INSERT INTO #COLLIDED_PROCESS
-    (ID_PROCESSO, [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
+    (ID_PROCESSO, [Mesma Classe], [Radical Cliente], [Radical Rpi], --[Quantidade de Radicais],
+     [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
     [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, [Data Depósito], [Data Concessão], Processo, Titular,
      Procurador)
     SELECT
         DISTINCT
         PRO.IdProcesso,
+        CASE
+              WHEN CLF.NUMERO_CLASSE_A = CLF.NUMERO_CLASSE_B
+                  THEN
+                    1
+              ELSE
+                  0
+        END                        AS [Mesma Classe],
+        CLI.Radical                AS [Radical Cliente],
+        PRO.RADICAL                AS [Radical Rpi],
         4                          AS [Tipo Colidência],
         PRO.MARCA				   AS [Marca(RPI)],
         CLI.MARCA				   AS [Marca(Cliente)],
@@ -318,12 +345,23 @@ DECLARE
     -- Radicais do cliente contidos no da RPI
 
     INSERT INTO #COLLIDED_PROCESS
-    (ID_PROCESSO, [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
-     [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, [Data Depósito], [Data Concessão], Processo, Titular,
+    (ID_PROCESSO, [Mesma Classe], [Radical Cliente], [Radical Rpi],
+     [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
+    [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, [Data Depósito], [Data Concessão], Processo, Titular,
      Procurador)
     SELECT
         DISTINCT
         PRO.IdProcesso,
+        CASE
+              WHEN CLF.NUMERO_CLASSE_A = CLF.NUMERO_CLASSE_B
+                  THEN
+                    1
+              ELSE
+                  0
+        END                        AS [Mesma Classe],
+        CLI.Radical                AS [Radical Cliente],
+        PRO.RADICAL                AS [Radical Rpi],
+
         3                          AS [Tipo Colidência],
         PRO.MARCA				   AS [Marca(RPI)],
         CLI.MARCA				   AS [Marca(Cliente)],
@@ -413,12 +451,23 @@ DECLARE
 
 
     INSERT INTO #COLLIDED_PROCESS
-    (ID_PROCESSO, [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
-     [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, [Data Depósito], [Data Concessão], Processo, Titular,
+    (ID_PROCESSO, [Mesma Classe], [Radical Cliente], [Radical Rpi],
+     [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
+    [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, [Data Depósito], [Data Concessão], Processo, Titular,
      Procurador)
     SELECT
         DISTINCT
         PRO.IdProcesso,
+        CASE
+              WHEN CLF.NUMERO_CLASSE_A = CLF.NUMERO_CLASSE_B
+                  THEN
+                    1
+              ELSE
+                  0
+        END                        AS [Mesma Classe],
+        CLI.Radical                AS [Radical Cliente],
+        PRO.RADICAL                AS [Radical Rpi],
+
         2                          AS [Tipo Colidência],
         PRO.MARCA				   AS [Marca(RPI)],
         CLI.MARCA				   AS [Marca(Cliente)],
@@ -514,12 +563,23 @@ DECLARE
     -- Radicais da RPI contidos no do cliente
 
     INSERT INTO #COLLIDED_PROCESS
-    (ID_PROCESSO, [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
-     [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, [Data Depósito], [Data Concessão], Processo, Titular,
+    (ID_PROCESSO, [Mesma Classe], [Radical Cliente], [Radical Rpi],
+     [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
+    [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, [Data Depósito], [Data Concessão], Processo, Titular,
      Procurador)
     SELECT
         DISTINCT
         PRO.IdProcesso,
+        CASE
+              WHEN CLF.NUMERO_CLASSE_A = CLF.NUMERO_CLASSE_B
+                  THEN
+                    1
+              ELSE
+                  0
+        END                        AS [Mesma Classe],
+        CLI.Radical                AS [Radical Cliente],
+        PRO.RADICAL                AS [Radical Rpi],
+
         3                          AS [Tipo Colidência],
         PRO.MARCA				   AS [Marca(RPI)],
         CLI.MARCA				   AS [Marca(Cliente)],
@@ -608,12 +668,22 @@ DECLARE
         AND CLI.LengthRadical > 1
 
     INSERT INTO #COLLIDED_PROCESS
-    (ID_PROCESSO, [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
-     [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, [Data Depósito], [Data Concessão], Processo, Titular,
+    (ID_PROCESSO, [Mesma Classe], [Radical Cliente], [Radical Rpi],
+     [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
+    [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, [Data Depósito], [Data Concessão], Processo, Titular,
      Procurador)
     SELECT
         DISTINCT
         PRO.IdProcesso,
+        CASE
+              WHEN CLF.NUMERO_CLASSE_A = CLF.NUMERO_CLASSE_B
+                  THEN
+                    1
+              ELSE
+                  0
+        END                        AS [Mesma Classe],
+        CLI.Radical                AS [Radical Cliente],
+        PRO.RADICAL                AS [Radical Rpi],
         2                          AS [Tipo Colidência],
         PRO.MARCA				   AS [Marca(RPI)],
         CLI.MARCA				   AS [Marca(Cliente)],
@@ -708,7 +778,7 @@ DECLARE
 
 
     SELECT
-
+      [Mesma Classe], MAX([Radical Cliente]), MAX([Radical Rpi]),
       MIN([Tipo Colidência]) AS [Tipo Colidência],
       [Marca(RPI)],
       [Marca(Cliente)],
@@ -766,14 +836,75 @@ DECLARE
       [Marca(Cliente)]
 
 
-      --delete from PROCESSO_RADICAL
-      --delete from CLIENT_PROCESSES
-      --delete from CLIENT_TO_COLLIDE
-      --delete from PROCESS_TO_COLLIDE_FULL
-      --DROP TABLE #CLIENT_PROCESSES_CLASS
-      --DROP TABLE  #COLLIDED_PROCESS
-      --delete from PROCESS_TO_COLLIDE
+--       delete from PROCESSO_RADICAL
+--       delete from CLIENT_PROCESSES
+--       delete from CLIENT_TO_COLLIDE
+--       delete from PROCESS_TO_COLLIDE_FULL
+--       DROP TABLE #CLIENT_PROCESSES_CLASS
+--       DROP TABLE  #COLLIDED_PROCESS
+--       delete from PROCESS_TO_COLLIDE
 
 
 	 --CTRL + K + U
 	 --CTRL + K + C
+
+
+select * from CLIENT_PROCESSES
+
+select * from PROCESS_TO_COLLIDE
+select * from CLIENT_TO_COLLIDE
+
+select * from RPI order by NUMERO desc
+
+
+SELECT
+       CLA.class,
+      CLP.Processo,
+      CLP.Marca,
+      dbo.RemoveCommonWords(CLP.Marca, CLA.class)
+--     MRC.*
+--     INTO
+--         #CLIENT_PROCESSES_CLASS
+FROM
+  CLIENT_PROCESSES CLP
+  CROSS APPLY dbo.FormatClassesFromFile(CLP.Classe) AS CLA
+--   CROSS APPLY dbo.RemoveCommonWords(CLP.Marca, CLA.class) AS MRC
+-- CROSS APPLY dbo.RemoveCommonWords(CLP.Marca, null) AS MRC
+
+
+
+
+SELECT
+        PRC.ID_PROCESSO,
+        PRO.NUMERO,
+        PRO.MARCA,
+        dbo.ORTOGRAFAR(dbo.RemoveCommonWords(PRO.MARCA, ISNULL(PRO.CLASSE_1, PRO.CLASSE_INTERNACIONAL))) AS MARCA_ORTOGRAFADA,
+        replace(dbo.REMOVER_VOGAIS(dbo.RemoveCommonWords(PRO.MARCA, ISNULL(PRO.CLASSE_1, PRO.CLASSE_INTERNACIONAL))), ' ', '') MARCA_SEM_VOGAIS,
+--         dbo.RemoveCommonWords(PRO.MARCA, ISNULL(PRO.CLASSE_1, PRO.CLASSE_INTERNACIONAL)) AS MARCA_ORTOGRAFADA,
+--         dbo.ORTOGRAFAR(PRO.MARCA) AS MARCA_ORTOGRAFADA,
+--         replace(PRO.MARCA_SEM_VOGAIS, ' ', '') AS MARCA_SEM_VOGAIS,
+        dbo.FormatClasses(PRO.CLASSE_1, PRO.CLASSE_2, PRO.CLASSE_3, PRO.CLASSE_INTERNACIONAL) AS FORMAT_CLASSES,
+        PRO.CLASSE_1,
+        PRO.CLASSE_INTERNACIONAL,
+        PRO.NOME_TITULAR,
+        PRO.ESPECIFICACAO,
+        CONVERT(VARCHAR, PRO.DATA_DEPOSITO, 103) AS DATA_DEPOSITO,
+        CONVERT(VARCHAR, PRO.DATA_CONCESSAO, 103) AS DATA_CONCESSAO,
+        DES.CODIGO,
+        PRO.NOME_PROCURADOR
+	FROM
+		PROCESSO_DESPACHO_COLIDI 	PRC
+        JOIN PROCESSO				PRO ON PRC.NUMERO_RPI = 2533 -- @rpi
+                                            AND PRO.TIPO_APRESENTACAO != 3
+                                            AND PRO.MARCA IS NOT NULL
+                                            AND PRO.ID = PRC.ID_PROCESSO
+        JOIN DESPACHO               DES ON DES.ID = PRC.ID_DESPACHO
+	  WHERE
+		NOT EXISTS(
+			  		SELECT
+			  			1
+			  		FROM
+			  			CLIENT_PROCESSES
+				  	WHERE
+					  	Processo = PRO.NUMERO
+				    )

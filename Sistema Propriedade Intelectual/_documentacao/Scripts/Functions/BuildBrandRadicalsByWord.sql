@@ -8,7 +8,8 @@ CREATE FUNCTION [dbo].[BuildBrandRadicalsByWord]
     @processNumber          VARCHAR(20),
     @brand                  NVARCHAR(1000),
     @withPreffixAndSuffix   BIT,
-    @justMainTerm           BIT
+    @justMainTerm           BIT,
+    @class                  VARCHAR(10)
 )
 RETURNS @output TABLE
     (
@@ -22,6 +23,8 @@ BEGIN
 
     SELECT
       @brand = REPLACE(@brand, '.', ' ')
+
+    SET @brand = dbo.RemoveCommonWords(@brand, @class)
 
     INSERT INTO @output
     (NUMERO_PROCESSO, RADICAL, LENGTH_RADICAL, MAIN)

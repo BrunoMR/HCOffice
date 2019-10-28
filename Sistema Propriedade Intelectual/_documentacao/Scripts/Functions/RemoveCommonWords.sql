@@ -5,7 +5,7 @@
 -- Ex:
 -- SELECT dbo.RemoveCommonWords('bruno opa machado teste cabelo no sofa as vezes EITa opa MAIS UMA vez cabelo', 'N0941')
 -- =============================================
-ALTER FUNCTION dbo.RemoveCommonWords
+CREATE FUNCTION dbo.RemoveCommonWords
 (
     @word   VARCHAR(255),
     @class  VARCHAR(10)
@@ -17,37 +17,41 @@ BEGIN
     DECLARE
         @words AS TABLE (Id INT IDENTITY(1,1), Word VARCHAR(255))
 
-    INSERT INTO @words
-    select
-      ltrim(rtrim(splitdata))
-    from
-        dbo.SplitString(@word, ' ')  spl
-    where
-        not exists(  select
-                        1
-                    from
-                        PALAVRA_USO_COMUM
-                    where
-                        Numero_Classe =  @class
-                        AND Palavra = spl.splitdata
-                )
 
-    SET @word =
-        (
-            SELECT
-                distinct
-                STUFF((SELECT
-                            ' ' + wrd2.Word
-                       FROM
-                            @words wrd2
-                       ORDER BY
-                            wrd2.Id
-                       FOR XML PATH('')), 1, 1, '')
-            FROM
-                 @words wrd
-            GROUP BY
-                wrd.Word
-        )
+    IF (@class IS NOT NULL)
+    begin
+        INSERT INTO @words
+        select
+          ltrim(rtrim(splitdata))
+        from
+            dbo.SplitString(@word, ' ')  spl
+        where
+            not exists(  select
+                            1
+                        from
+                            PALAVRA_USO_COMUM
+                        where
+                            Numero_Classe =  @class
+                            AND Palavra = spl.splitdata
+                    )
+
+        SET @word =
+            (
+                SELECT
+                    distinct
+                    STUFF((SELECT
+                                ' ' + wrd2.Word
+                           FROM
+                                @words wrd2
+                           ORDER BY
+                                wrd2.Id
+                           FOR XML PATH('')), 1, 1, '')
+                FROM
+                     @words wrd
+                GROUP BY
+                    wrd.Word
+            )
+    end
 
   RETURN @word
 END
