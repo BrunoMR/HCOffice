@@ -16,7 +16,7 @@ CREATE TABLE PROCESS_TO_COLLIDE_FULL
     Numero               varchar(20),
     NomeTitular          varchar(500),
     NomeProcurador       varchar(500),
-	MarcaSemVogais		 varchar(100),
+	MarcaSemVogais		 varchar(200),
     LenMarcaSemVogais    int
     primary key nonclustered (ID)
 )
