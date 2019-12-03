@@ -908,3 +908,139 @@ SELECT
 				  	WHERE
 					  	Processo = PRO.NUMERO
 				    )
+
+
+
+ SELECT
+        PRO.IdProcesso,
+        CASE
+              WHEN CLF.NUMERO_CLASSE_A = CLF.NUMERO_CLASSE_B
+                  THEN
+                    1
+              ELSE
+                  0
+        END                        AS [Mesma Classe],
+        CLI.Radical                AS [Radical Cliente],
+        PRO.RADICAL                AS [Radical Rpi],
+
+        3                          AS [Tipo Colidência],
+        PRO.MARCA				   AS [Marca(RPI)],
+        CLI.MARCA				   AS [Marca(Cliente)],
+
+        CLI.Classe                 AS [Classe(Cliente)],
+        CLI.Deposito               AS [Data Depósito(Cliente)],
+        CLI.Concessao              AS [Data Concessão(Cliente)],
+        CLI.Processo               AS [Processo(Cliente)],
+        CLI.Titular                AS [Titular(Cliente)],
+        CLI.Pasta				   AS [Referência/Pasta],
+        CLI.Responsavel			   AS [Escritório Responsável],
+        CLI.Advogado               AS [Advogado Responsável],
+
+        PRO.CODIGO                 AS [Despacho],
+        PRO.FormatClasses		   AS [Classe],
+        PRO.DataDeposito           AS [Data Depósito],
+        PRO.DataConcessao          AS [Data Depósito],
+        PRO.NUMERO				   AS [Processo],
+        PRO.NomeTitular		       AS [Titular],
+        PRO.NomeProcurador         AS [Procurador]
+      FROM
+        CLIENT_TO_COLLIDE               CLI
+        JOIN PROCESS_TO_COLLIDE_FULL    PRO ON PRO.LengthRadical >= CLI.LengthRadical
+                    AND
+                    (
+                       (
+                         CLI.LengthRadical = PRO.LengthRadical
+                       )
+                       OR
+                       (
+                         --CLI.LengthRadical = 3 AND PRO.LengthRadical <= 9
+                         CLI.LengthRadical = 3 AND PRO.LengthRadical <= 12
+                         --CLI.LengthRadical = 3 AND PRO.LengthRadical <= 6
+                       )
+                       OR
+                       (
+                         --CLI.LengthRadical = 4 AND PRO.LengthRadical <= 12
+                         CLI.LengthRadical = 4 AND PRO.LengthRadical <= 16
+                         --CLI.LengthRadical = 4 AND PRO.LengthRadical <= 8
+                       )
+                       OR
+                       (
+                         --CLI.LengthRadical = 5 AND PRO.LengthRadical <= 15
+                         CLI.LengthRadical = 5 AND PRO.LengthRadical <= 20
+                         --CLI.LengthRadical = 5 AND PRO.LengthRadical <= 10
+                       )
+                       OR
+                       (
+                         --CLI.LengthRadical = 6 AND PRO.LengthRadical <= 18
+                         CLI.LengthRadical = 6 AND PRO.LengthRadical <= 24
+                         --CLI.LengthRadical = 6 AND PRO.LengthRadical <= 12
+                       )
+                       OR
+                       (
+                         --CLI.LengthRadical = 7 AND PRO.LengthRadical <= 21
+                         CLI.LengthRadical = 7 AND PRO.LengthRadical <= 30
+                         --CLI.LengthRadical = 7 AND PRO.LengthRadical <= 14
+                       )
+                       OR
+                       (
+                         --CLI.LengthRadical = 8 AND PRO.LengthRadical <= 24
+                         CLI.LengthRadical = 8 AND PRO.LengthRadical <= 32
+                         --CLI.LengthRadical = 8 AND PRO.LengthRadical <= 16
+                       )
+                       OR
+                       (
+                         --CLI.LengthRadical = 9 AND PRO.LengthRadical <= 27
+                         CLI.LengthRadical = 9 AND PRO.LengthRadical <= 36
+                         --CLI.LengthRadical = 9 AND PRO.LengthRadical <= 18
+                       )
+                    )
+                    AND
+                    (
+                      PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = CLI.RADICAL
+                      OR
+                      PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE CLI.RADICAL + '%'
+                      OR
+                      PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + CLI.RADICAL
+                    )
+        JOIN CLASSE_AFINIDADE CLF ON CLF.NUMERO_CLASSE_A = CLI.class
+                                   AND CLF.NUMERO_CLASSE_B = COALESCE(PRO.Classe1, PRO.ClasseInternacional)
+group by
+    PRO.IdProcesso, CASE
+              WHEN CLF.NUMERO_CLASSE_A = CLF.NUMERO_CLASSE_B
+                  THEN
+                    1
+              ELSE
+                  0
+        END, CLI.Radical, PRO.RADICAL, PRO.MARCA, CLI.MARCA, CLI.Classe, CLI.Deposito, CLI.Concessao, CLI.Processo, CLI.Titular, CLI.Pasta, CLI.Responsavel, CLI.Advogado, PRO.CODIGO, PRO.FormatClasses, PRO.DataDeposito, PRO.DataConcessao, PRO.NUMERO, PRO.NomeTitular, PRO.NomeProcurador
+
+        PRO.IdProcesso,
+        CASE
+              WHEN CLF.NUMERO_CLASSE_A = CLF.NUMERO_CLASSE_B
+                  THEN
+                    1
+              ELSE
+                  0
+        END,
+        CLI.Radical,
+        PRO.RADICAL,
+
+        3,
+        PRO.MARCA,
+        CLI.MARCA,
+
+        CLI.Classe,
+        CLI.Deposito,
+        CLI.Concessaoo
+        CLI.Processo,
+        CLI.Titular,
+        CLI.Pasta,
+        CLI.Responsavel,
+        CLI.Advogado,
+
+        PRO.CODIGO,
+        PRO.FormatClasses,
+        PRO.DataDeposit,
+        PRO.DataConcessao,
+        PRO.NUMERO,
+        PRO.NomeTitular,
+        PRO.NomeProcurador
