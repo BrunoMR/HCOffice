@@ -14,45 +14,48 @@ RETURNS VARCHAR(255)
 AS
 BEGIN
 
+    IF @class IS NULL
+        RETURN @word
+        
     DECLARE
         @words AS TABLE (Id INT IDENTITY(1,1), Word VARCHAR(255))
 
+    INSERT INTO @words
+    select
+      ltrim(rtrim(splitdata))
+    from
+        dbo.SplitString(@word, ' ')  spl
+    where
+        not exists(  select
+                        1
+                    from
+                        PALAVRA_USO_COMUM
+                    where
+                          (
+                              Numero_Classe = @class
+                              AND Palavra = spl.splitdata
+                          )
+                          OR @class IS NULL
+                )
 
-    IF (@class IS NOT NULL)
-    begin
-        INSERT INTO @words
-        select
-          ltrim(rtrim(splitdata))
-        from
-            dbo.SplitString(@word, ' ')  spl
-        where
-            not exists(  select
-                            1
-                        from
-                            PALAVRA_USO_COMUM
-                        where
-                            Numero_Classe =  @class
-                            AND Palavra = spl.splitdata
-                    )
-
-        SET @word =
-            (
-                SELECT
-                    distinct
-                    STUFF((SELECT
-                                ' ' + wrd2.Word
-                           FROM
-                                @words wrd2
-                           ORDER BY
-                                wrd2.Id
-                           FOR XML PATH('')), 1, 1, '')
-                FROM
-                     @words wrd
-                GROUP BY
-                    wrd.Word
-            )
-    end
+    SET @word =
+        (
+            SELECT
+                distinct
+                STUFF((SELECT
+                            ' ' + wrd2.Word
+                       FROM
+                            @words wrd2
+                       ORDER BY
+                            wrd2.Id
+                       FOR XML PATH('')), 1, 1, '')
+            FROM
+                 @words wrd
+            GROUP BY
+                wrd.Word
+        )
 
   RETURN @word
 END
 go
+
