@@ -46,6 +46,9 @@
         [XmlElement("classe-nice")]
         public ClasseNice ClasseNice { get; set; }
 
+        [XmlElement("lista-classe-nice")]
+        public ListaClasseNice ListaClasseNice { get; set; }
+
         [XmlIgnore]
         public string DataRegistro
         {

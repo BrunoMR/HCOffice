@@ -50,6 +50,10 @@
                 .When(processo => processo.ClasseNice != null);
 
             RuleFor(processo => processo)
+                .SetValidator(new ListaClasseNiceValidation())
+                .When(processo => processo.ListaClasseNice != null);
+
+            RuleFor(processo => processo)
                 .Must(LoggingLastProcesso);
         }
 

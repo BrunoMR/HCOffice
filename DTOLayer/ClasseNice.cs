@@ -8,7 +8,8 @@ namespace DTOLayer
     {
         private string _codigo;
         private string _descricao;
-        
+        private string _status;
+
         [XmlAttribute("codigo")]
         public string Codigo
         {
@@ -21,6 +22,13 @@ namespace DTOLayer
         {
             get { return _descricao; }
             set { _descricao = value; }
+        }
+
+        [XmlElement("status")]
+        public string Status
+        {
+            get { return _status; }
+            set { _status = value; }
         }
     }
 }

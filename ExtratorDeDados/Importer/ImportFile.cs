@@ -41,6 +41,7 @@ namespace ExtratorDeDados.Importer
             result.Add("Importação", false);
             return result;
         }
+
         private static List<RpiImported> GetAllFiles(string path)
         {
             FileNegocio.Files = Directory.GetFiles(path, "*.*", SearchOption.TopDirectoryOnly)

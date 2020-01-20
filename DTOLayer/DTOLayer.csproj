@@ -73,6 +73,7 @@
     <Compile Include="Atributo.cs" />
     <Compile Include="Classe.cs" />
     <Compile Include="ClasseAfinidade.cs" />
+    <Compile Include="ListaClasseNice.cs" />
     <Compile Include="Domain\Domain.cs" />
     <Compile Include="Domain\DomainProcess.cs" />
     <Compile Include="Enum\ChangeName.cs" />

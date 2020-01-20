@@ -4,12 +4,12 @@
     using ClasseNice;
     using FluentValidation;
 
-    public class ClasseNiceValidation : AbstractValidator<ProcessoImported>
+    public class ListaClasseNiceValidation : AbstractValidator<ProcessoImported>
     {
-        public ClasseNiceValidation()
+        public ListaClasseNiceValidation()
         {
             RuleFor(processo => processo)
-                .SetValidator(new ClasseNiceProperty());
+                .SetValidator(new ClassesNiceProperty());
         }
     }
 }
