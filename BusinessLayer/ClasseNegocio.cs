@@ -1,4 +1,7 @@
-﻿namespace BusinessLayer
+﻿using System.Data;
+using System.Data.SqlClient;
+
+namespace BusinessLayer
 {
     using System;
     using System.Collections.Generic;
@@ -212,8 +215,43 @@
             IClasseRepository classeRepository = new ClasseRepository();
             _classeList = classeRepository.GetAll();
         }
-        
+
+        public static void InsertOrUpdate(List<ProcessoImported> processos, SqlTransaction transaction)
+        {
+            IClasseRepository cfe4Repository = new ClasseRepository();
+            cfe4Repository.BulkUpsert(CreateDataTable(processos), transaction);
+        }
 
         #endregion Public Methods
+
+        private static DataTable CreateDataTable(List<ProcessoImported> processos)
+        {
+            try
+            {
+                var dataTable = new DataTable();
+                dataTable.Columns.Add("NUMERO_PROCESSO", typeof(string));
+                dataTable.Columns.Add("NUMERO_CLASSE", typeof(string));
+                dataTable.Columns.Add("TIPO_DESCRICAO", typeof(string));
+                dataTable.Columns.Add("ESPECIFICACAO", typeof(string));
+
+                processos.ForEach(pro =>
+                {
+                    pro.ListaClasseNice?.ClassesNice?.ForEach(cla =>
+                    {
+                        dataTable.Rows.Add(pro.NumeroProcesso,
+                            RetrieveCodeClasseNiceIfFromXml(cla.Codigo, pro.NumeroProcesso),
+                            cla.Status,
+                            cla.Descricao);
+                    });
+                });
+
+                return dataTable;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }

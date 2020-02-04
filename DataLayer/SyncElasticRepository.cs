@@ -256,15 +256,21 @@
                 query.AppendLine("DSI.DESCRICAO AS DespachoSituacao, ");
                 query.AppendLine("DTP.TIPO AS DespachoTipo, ");
                 query.AppendLine("DTP.DESCRICAO AS DespachoTipoDescricao, ");
-                query.AppendLine("PRD.NUMERO_RPI AS DespachoRpi, ");
-                query.AppendLine("CONVERT(DATE, PRD.DATA_DESPACHO) AS DespachoData, ");
-                query.AppendLine("PRD.COMPLEMENTO AS DespachoComplemento, ");
+                query.AppendLine("PRI.NUMERO_RPI AS DespachoRpi, ");
+                query.AppendLine("CONVERT(DATE, PRI.DATA_DESPACHO) AS DespachoData, ");
+                query.AppendLine("PRI.COMPLEMENTO AS DespachoComplemento, ");
                 query.AppendLine("PRT.NUMERO AS ProtocoloNumero, ");
                 query.AppendLine("PRT.CODIGO_SERVICO AS ProtocoloCodigo, ");
                 query.AppendLine("CONVERT(DATE, PRT.DATA) AS ProtocoloData, ");
                 query.AppendLine("PRT.NOME_RAZAO_SOCIAL AS ProtocoloNomeRazaoSocial, ");
                 query.AppendLine("PRT.PAIS AS ProtocoloPais, ");
-                query.AppendLine("PRT.UF AS ProtocoloUf ");
+                query.AppendLine("PRT.UF AS ProtocoloUf, ");
+
+                query.AppendLine("dbo.GetJustClasse(PRC.NUMERO_CLASSE) AS Classe, ");
+                query.AppendLine("dbo.GetJustEditionClasse(PRC.NUMERO_CLASSE) AS ClasseEdicao, ");
+                query.AppendLine("CLN.DESCRICAO AS ClasseDescricao, ");
+                query.AppendLine("TSC.DESCRICAO AS ClasseStatus, ");
+                query.AppendLine("PRC.ESPECIFICAO AS EspecificacaoNova ");
 
                 query.AppendLine("FROM ");
                 query.AppendLine("PROCESSO_DESPACHO             PRI ");
@@ -273,9 +279,11 @@
                 query.AppendLine("LEFT JOIN TIPO_NATUREZA       TPN ON TPN.ID = PRO.TIPO_NATUREZA ");
                 query.AppendLine("LEFT JOIN PROCESSO_CFE4       PR4 ON PR4.ID_PROCESSO = PRO.ID ");
                 query.AppendLine("LEFT JOIN CFE4                CFE ON CFE.ID = PR4.ID_CFE4 ");
-                query.AppendLine("LEFT JOIN PROCESSO_DESPACHO   PRD ON PRD.ID_PROCESSO = PRO.ID ");
-                query.AppendLine("LEFT JOIN DESPACHO            DEP ON DEP.ID = PRD.ID_DESPACHO ");
-                query.AppendLine("LEFT JOIN PROTOCOLO           PRT ON PRT.ID = PRD.ID_PROTOCOLO ");
+                query.AppendLine("LEFT JOIN PROCESSO_CLASSE     PRC ON PRC.ID_PROCESSO = PRO.ID ");
+                query.AppendLine("LEFT JOIN CLASSE              CLN ON CLN.NUMERO_CLASSE = PRC.NUMERO_CLASSE ");
+                query.AppendLine("LEFT JOIN TIPO_SITUACAO_CLASSE TSC ON TSC.TIPO = PRC.TIPO ");
+                query.AppendLine("LEFT JOIN DESPACHO            DEP ON DEP.ID = PRI.ID_DESPACHO ");
+                query.AppendLine("LEFT JOIN PROTOCOLO           PRT ON PRT.ID = PRI.ID_PROTOCOLO ");
                 query.AppendLine("LEFT JOIN TIPO_SITUACAO       DSI ON DSI.TIPO = DEP.SITUACAO ");
                 query.AppendLine("LEFT JOIN TIPO_DESPACHO       DTP ON DTP.TIPO = DEP.TIPO ");
                 query.AppendLine("LEFT JOIN CLASSE              CLI ON CLI.NUMERO_CLASSE = PRO.CLASSE_INTERNACIONAL ");

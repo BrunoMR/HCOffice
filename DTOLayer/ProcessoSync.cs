@@ -67,5 +67,15 @@
         public string ProtocoloNomeRazaoSocial { get; set; }
         public string ProtocoloPais { get; set; }
         public string ProtocoloUf { get; set; }
+
+        public string Classe { get; set; }
+
+        public string ClasseEdicao { get; set; }
+
+        public string ClasseDescricao { get; set; }
+
+        public string ClasseStatus { get; set; }
+
+        public string EspecificacaoNova { get; set; }
     }
 }

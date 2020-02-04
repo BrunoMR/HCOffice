@@ -3,7 +3,7 @@
 -- Create date: 15/12/2017
 -- Description:	Este procedimento irá atualizar a base local com com a rpi passada por parâmetro
 -- =============================================
-CREATE PROCEDURE [dbo].[UPDATE_DATABASE_BY_RPI]
+create PROCEDURE [dbo].[UPDATE_DATABASE_BY_RPI]
   @rpi INT
 AS
 BEGIN
@@ -13,7 +13,8 @@ BEGIN
     @processList PROCESSOTYPE,
     @processDespachoList PROCESSODESPACHOTYPE,
     @processCfe4List CFE4TYPE,
-    @processProtocolList PROTOCOLOTYPE
+    @processProtocolList PROTOCOLOTYPE,
+    @processClasList PROCESSOCLASSETYPE
 
   -- Add the RPI
   INSERT INTO RPI
@@ -206,6 +207,28 @@ BEGIN
   EXECUTE UPDATE_PROCESSO_CFE4
     @processCfe4List
 
-END
+	INSERT INTO @processClasList
+	(
+		NUMERO_PROCESSO,
+		NUMERO_CLASSE,
+		TIPO_DESCRICAO,
+		ESPECIFICAO
+	)
+	SELECT
+		PRO.NUMERO,
+		PRC.NUMERO_CLASSE,
+		TSC.DESCRICAO,
+		PRC.ESPECIFICAO
+	FROM
+		MYAZUREDB.HCOFFICE_FULL.dbo.PROCESSO PRO
+		JOIN MyAzureDb.HCOFFICE_FULL.dbo.PROCESSO_DESPACHO  PRD ON PRD.ID_PROCESSO = PRO.ID
+                                                               AND PRD.NUMERO_RPI = @rpi
+		JOIN MYAZUREDB.HCOFFICE_FULL.dbo.PROCESSO_CLASSE PRC ON PRC.ID_PROCESSO = PRO.ID
+		JOIN MYAZUREDB.HCOFFICE_FULL.dbo.TIPO_SITUACAO_CLASSE TSC ON  TSC.TIPO = PRC.TIPO
 
-GO
+  EXECUTE UPDATE_PROCESSO_CLASSE
+    @processClasList
+
+END
+go
+

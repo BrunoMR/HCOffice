@@ -1,4 +1,7 @@
-﻿namespace DataLayer
+﻿using System.Data;
+using System.Data.SqlClient;
+
+namespace DataLayer
 {
     using System.Collections.Generic;
     using DTOLayer;
@@ -14,5 +17,7 @@
         void Remove(string code);
 
         #endregion CRUD
+
+        void BulkUpsert(DataTable dataTableModel, SqlTransaction transaction);
     }
 }

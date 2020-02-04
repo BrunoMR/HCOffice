@@ -116,9 +116,9 @@
                     ProcessoDespachoNegocio.BulkInsert(processoDespachoList, transaction);
                     //_cfe4Negocio.InsertOrUpdate(rpi.Processo, transaction);
 					Cfe4Negocio.InsertOrUpdate(rpi.Processo, transaction);
+                    ClasseNegocio.InsertOrUpdate(rpi.Processo, transaction);
 
-
-					transaction.Commit();
+                    transaction.Commit();
                 }
                 catch (Exception ex)
                 {

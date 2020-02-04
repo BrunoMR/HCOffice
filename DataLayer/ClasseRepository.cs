@@ -1,4 +1,8 @@
-﻿namespace DataLayer
+﻿using System.Data;
+using System.Data.SqlClient;
+using DataLayer.Connections;
+
+namespace DataLayer
 {
     using System;
     using System.Collections.Generic;
@@ -71,5 +75,27 @@
         }
 
         #endregion CRUD
+
+        public void BulkUpsert(DataTable dataTableModel, SqlTransaction transaction)
+        {
+            try
+            {
+                using (var cmd = new SqlCommand("UPDATE_PROCESSO_CLASSE"))
+                {
+                    var connection = ConnectionDapper.RetornaInstancia();
+
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Connection = connection.AbreConexao();
+                    cmd.Parameters.AddWithValue("@tableClasses", dataTableModel);
+                    cmd.Transaction = transaction;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException ex)
+            {
+
+                throw new Exception("Não foi possível inserir as Classes do Processo ", ex.InnerException);
+            }
+        }
     }
 }

@@ -290,11 +290,11 @@
 
             try
             {
-                var inicial = 0;
-                var count = 10;
+                //var inicial = 0;
+                //var count = 10;
 
                 processos
-                    .GetRange(inicial, count)
+                    //.GetRange(inicial, count)
                     .ForEach(pro =>
                     {
                         dataTable.Rows.Add(
