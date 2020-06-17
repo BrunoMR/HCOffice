@@ -28,6 +28,9 @@
         [XmlElement("marca")]
         public Marca Marca { get; set; }
 
+        [XmlElement("dados-de-madri")]
+        public DadosDeMadri DadosDeMadri { get; set; }
+
         [XmlElement("despachos")]
         public Despachos Despachos { get; set; }
 

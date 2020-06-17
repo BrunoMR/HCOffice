@@ -3,13 +3,13 @@ using System.Data.SqlClient;
 
 namespace BusinessLayer
 {
+    using DataLayer;
+    using DTOLayer;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using DataLayer;
-    using DTOLayer;
     using Utils;
 
     public class ClasseNegocio : IClasseNegocio
@@ -97,7 +97,7 @@ namespace BusinessLayer
             {
                 throw new Exception(ex.Message);
             }
-            
+
         }
 
         /// <summary>
@@ -111,14 +111,14 @@ namespace BusinessLayer
         {
             var numeroRpi = RpiNegocio.CurrentRpi?.NumeroRpi.ToString();
             var nclEdition = FindNiceInDirectory(numeroRpi, numeroProcesso);
-            
-            var codeClasseNice = string.Format("N{0}{1}", 
-                nclEdition, 
+
+            var codeClasseNice = string.Format("N{0}{1}",
+                nclEdition,
                 codigo);
 
             return codeClasseNice;
         }
-        
+
         public static string BuildCodeClasseNice(GroupCollection values)
         {
             var nclEdition = values[2].Length < 2 ? "0" + values[2].Value : values[2].Value;
@@ -127,7 +127,7 @@ namespace BusinessLayer
             var codeClasseNice = string.Format("N{0}{1}",
                 nclEdition,
                 codigo);
-            
+
             return codeClasseNice;
         }
 
@@ -142,18 +142,22 @@ namespace BusinessLayer
 
             return codeClasseNice;
         }
-        
+
         public static string FindNiceInDirectory(string numeroRpi, string numeroProcesso)
         {
             var path = ConfiguracaoNegocio.FindValueByDescription("BUSCA NCL");
             if (path == null)
+            {
                 throw new Exception("Caminho NCL não encontrado");
+            }
 
             var fileRpi = Directory.GetFiles(path, "*.txt", SearchOption.TopDirectoryOnly)
                 .Where(x => x.Contains("-" + numeroRpi + "."));
 
             if (!fileRpi.Any())
+            {
                 throw new Exception(string.Format("Não foi encontrado arquivo NCL da RPI '{0}'", numeroRpi));
+            }
 
             string nclEdition = null;
             fileRpi
@@ -201,7 +205,10 @@ namespace BusinessLayer
         public static string RetrieveCodeClasseNiceIfFromXml(string codigo, string numeroProcesso)
         {
             if (string.IsNullOrWhiteSpace(codigo))
+            {
                 return null;
+            }
+
             return !codigo.ToUpper().StartsWith("N") && !(RegularExpressions.CodeClasseNiceFromTxt.IsMatch(codigo))
                 ? BuildCodeClasseNice(codigo, numeroProcesso)
                 : codigo;
@@ -233,15 +240,32 @@ namespace BusinessLayer
                 dataTable.Columns.Add("NUMERO_CLASSE", typeof(string));
                 dataTable.Columns.Add("TIPO_DESCRICAO", typeof(string));
                 dataTable.Columns.Add("ESPECIFICACAO", typeof(string));
+                dataTable.Columns.Add("TRADUCAO_ESPECIFICACAO", typeof(string));
 
                 processos.ForEach(pro =>
                 {
                     pro.ListaClasseNice?.ClassesNice?.ForEach(cla =>
                     {
+                        var isNational = string.IsNullOrWhiteSpace(cla.TraducaoEspecificacao);
+                        string specification;
+                        string translate = null;
+
+                        if (isNational)
+                        {
+                            specification = cla.Descricao;
+                        }
+                        else
+                        {
+                            specification = cla.TraducaoEspecificacao;
+                            translate = cla.Descricao;
+                        }
+                        
+
                         dataTable.Rows.Add(pro.NumeroProcesso,
                             RetrieveCodeClasseNiceIfFromXml(cla.Codigo, pro.NumeroProcesso),
                             cla.Status,
-                            cla.Descricao);
+                            specification,
+                            translate);
                     });
                 });
 

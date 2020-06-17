@@ -103,6 +103,7 @@
     <Compile Include="Despachos.cs" />
     <Compile Include="Indexes\SubClasseSync.cs" />
     <Compile Include="Indexes\ClasseIndex.cs" />
+    <Compile Include="DadosDeMadri.cs" />
     <Compile Include="Marca.cs" />
     <Compile Include="Pagination.cs" />
     <Compile Include="Pais.cs" />
