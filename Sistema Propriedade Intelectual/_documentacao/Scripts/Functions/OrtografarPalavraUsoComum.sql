@@ -3,14 +3,13 @@
 -- Create date: 09/09/2018
 -- Description:	Este procedimento faz a ortografia para uso da palavra de uso comum
 -- =============================================
-CREATE FUNCTION [dbo].ORTOGRAFAR_PALAVRA_COMUM (@marca VARCHAR(2000))
+CREATE FUNCTION [dbo].OrtografarPalavraUsoComum (@marca VARCHAR(2000))
 RETURNS VARCHAR(2000)
 BEGIN
    DECLARE
       @marcaOrtografada VARCHAR(2000)
 
    SET @marcaOrtografada = upper(@marca);
-   SET @marcaOrtografada = replace(@marcaOrtografada, ' ', '');
    SET @marcaOrtografada = replace(@marcaOrtografada,'Å', 'A');
    SET @marcaOrtografada = replace(@marcaOrtografada,'Á', 'A');
    SET @marcaOrtografada = replace(@marcaOrtografada,'À', 'A');
@@ -83,3 +82,5 @@ BEGIN
   
    RETURN ltrim(@marcaOrtografada)
 END
+go
+
