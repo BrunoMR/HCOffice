@@ -6,21 +6,16 @@ namespace DTOLayer
     [Serializable]
     public class ClasseNice
     {
-        private string _codigo;
-        private string _descricao;
-        
         [XmlAttribute("codigo")]
-        public string Codigo
-        {
-            get { return _codigo; }
-            set { _codigo = value; }
-        }
+        public string Codigo { get; set; }
 
         [XmlElement("especificacao")]
-        public string Descricao
-        {
-            get { return _descricao; }
-            set { _descricao = value; }
-        }
+        public string Descricao { get; set; }
+
+        [XmlElement("traducao-especificacao")]
+        public string TraducaoEspecificacao { get; set; }
+
+        [XmlElement("status")]
+        public string Status { get; set; }
     }
 }

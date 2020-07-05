@@ -28,6 +28,9 @@
         [XmlElement("marca")]
         public Marca Marca { get; set; }
 
+        [XmlElement("dados-de-madri")]
+        public DadosDeMadri DadosDeMadri { get; set; }
+
         [XmlElement("despachos")]
         public Despachos Despachos { get; set; }
 
@@ -45,6 +48,9 @@
 
         [XmlElement("classe-nice")]
         public ClasseNice ClasseNice { get; set; }
+
+        [XmlElement("lista-classe-nice")]
+        public ListaClasseNice ListaClasseNice { get; set; }
 
         [XmlIgnore]
         public string DataRegistro

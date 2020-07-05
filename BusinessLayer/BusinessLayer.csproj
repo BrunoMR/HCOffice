@@ -127,6 +127,8 @@
     <Compile Include="Validation\ClasseNacional\ClasseNacionalPropertySecond.cs" />
     <Compile Include="Validation\ClasseNacional\ClasseNacionalPropertyThird.cs" />
     <Compile Include="Validation\ClasseNacional\IClasseNacionalProperty.cs" />
+    <Compile Include="Validation\ClasseNice\ClassesNiceProperty.cs" />
+    <Compile Include="Validation\ListaClasseNiceValidation.cs" />
     <Compile Include="Validation\ClasseNiceValidation.cs" />
     <Compile Include="Validation\ClasseNice\ClasseNiceProperty.cs" />
     <Compile Include="Validation\ClasseViennaValidation.cs" />

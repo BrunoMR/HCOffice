@@ -258,7 +258,7 @@
             }
         }
 
-        private static DataTable CreateDataTable(List<ProcessoImported> processos)
+        private static DataTable Creat_eDataTable(List<ProcessoImported> processos)
         {
             var dataTable = new DataTable();
             dataTable.Columns.Add("NUMERO", typeof(string));
@@ -287,14 +287,16 @@
             dataTable.Columns.Add("DATA_REGISTRO", typeof(DateTime));
             dataTable.Columns.Add("DATA_VIGENCIA", typeof(DateTime));
             dataTable.Columns.Add("MARCA_SEM_VOGAIS", typeof(string));
+            dataTable.Columns.Add("NUMERO_INSCRICAO_INTERNACIONAL", typeof(string));
+            dataTable.Columns.Add("DATA_RECEBIMENTO_INPI", typeof(DateTime)); 
 
             try
             {
-                var inicial = 0;
-                var count = 10;
+                //var inicial = 0;
+                //var count = 10;
 
                 processos
-                    .GetRange(inicial, count)
+                    //.GetRange(inicial, count)
                     .ForEach(pro =>
                     {
                         dataTable.Rows.Add(
@@ -323,7 +325,9 @@
                             pro.DataConcessao.VerificarData(),
                             pro.DataRegistro.VerificarData(),
                             pro.DataVigencia.VerificarData(),
-                            pro.Marca?.Nome.RetirarVogais());
+                            pro.Marca?.Nome.RetirarVogais(),
+                            pro.DadosDeMadri?.NumeroInscricaoInternacional,
+                            pro.DadosDeMadri?.DataRecebimentoInpi.VerificarData());
                     });
 
 

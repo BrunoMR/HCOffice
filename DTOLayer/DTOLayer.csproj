@@ -73,6 +73,7 @@
     <Compile Include="Atributo.cs" />
     <Compile Include="Classe.cs" />
     <Compile Include="ClasseAfinidade.cs" />
+    <Compile Include="ListaClasseNice.cs" />
     <Compile Include="Domain\Domain.cs" />
     <Compile Include="Domain\DomainProcess.cs" />
     <Compile Include="Enum\ChangeName.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Despachos.cs" />
     <Compile Include="Indexes\SubClasseSync.cs" />
     <Compile Include="Indexes\ClasseIndex.cs" />
+    <Compile Include="DadosDeMadri.cs" />
     <Compile Include="Marca.cs" />
     <Compile Include="Pagination.cs" />
     <Compile Include="Pais.cs" />

@@ -1,7 +1,6 @@
 ﻿namespace BusinessLayer
 {
     using System.Linq;
-
     using DTOLayer;
 
     public class TitularNegocio

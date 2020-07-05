@@ -230,6 +230,8 @@
             var classeList = new List<ClasseSync>();
             classeList.AddRange(GroupByClasseInternacional(processosSync));
             classeList.AddRange(GroupByClasseNacional(processosSync));
+            classeList.AddRange(GroupByClasse(processosSync));
+
             BuildProcessoWithChilds(processoList, cfe4List, despachoList, classeList);
 
             return processoList;
@@ -556,6 +558,30 @@
             return auxClasseList;
         }
 
+        private IEnumerable<ClasseSync> GroupByClasse(IEnumerable<ProcessoSync> processosSync)
+        {
+            return processosSync
+                .Where(x => !string.IsNullOrWhiteSpace(x.Classe))
+                .AsParallel()
+                .GroupBy(x => new
+                {
+                    x.Numero,
+                    x.Classe,
+                    x.ClasseEdicao,
+                    x.ClasseDescricao,
+                    x.ClasseStatus,
+                    x.EspecificacaoNova
+                }).Select(x => new ClasseSync()
+                {
+                    ProcessoNumero = x.Key.Numero,
+                    Codigo = x.Key.Classe.Trim(),
+                    Edicao = x.Key.ClasseEdicao.TrimStart('0'),
+                    Descricao = x.Key.ClasseDescricao,
+                    Status = x.Key.ClasseStatus,
+                    Especificado = x.Key.EspecificacaoNova
+                }).ToList();
+        }
+
         /// <summary>
         /// The build processo with childs.
         /// </summary>
@@ -563,7 +589,10 @@
         /// <param name="cfe4List">The cfe 4 list.</param>
         /// <param name="despachoList">The despacho list.</param>
         /// <param name="classeList">The classe list.</param>
-        private void BuildProcessoWithChilds(IEnumerable<ProcessoIndex> processoList, IEnumerable<Cfe4Sync> cfe4List, IEnumerable<DespachoSync> despachoList, IEnumerable<ClasseSync> classeList)
+        private void BuildProcessoWithChilds(IEnumerable<ProcessoIndex> processoList, 
+            IEnumerable<Cfe4Sync> cfe4List, 
+            IEnumerable<DespachoSync> despachoList, 
+            IEnumerable<ClasseSync> classeList)
         {
             processoList
                 .AsParallel()
