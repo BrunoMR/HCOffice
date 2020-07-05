@@ -220,40 +220,6 @@ EXECUTE(@sqlExcel)
         JOIN CLI ON CLI.LENGTH_RADICAL >= EMP.LENGTH_RADICAL
                       AND
                       (
-                         (
-                           EMP.LENGTH_RADICAL = CLI.LENGTH_RADICAL
-                         )
-                         OR
-                         (
-                           EMP.LENGTH_RADICAL = 3 AND CLI.LENGTH_RADICAL <= 100
-                         )
-                         OR
-                         (
-                           EMP.LENGTH_RADICAL = 4 AND CLI.LENGTH_RADICAL <= 100
-                         )
-                         OR
-                         (
-                           EMP.LENGTH_RADICAL = 5 AND CLI.LENGTH_RADICAL <= 100
-                         )
-                         OR
-                         (
-                           EMP.LENGTH_RADICAL = 6 AND CLI.LENGTH_RADICAL <= 100
-                         )
-                         OR
-                         (
-                           EMP.LENGTH_RADICAL = 7 AND CLI.LENGTH_RADICAL <= 100
-                         )
-                         OR
-                         (
-                           EMP.LENGTH_RADICAL = 8 AND CLI.LENGTH_RADICAL <= 100
-                         )
-                         OR
-                         (
-                           EMP.LENGTH_RADICAL = 9 AND CLI.LENGTH_RADICAL <= 100
-                         )
-                      )
-                      AND
-                      (
                         CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = EMP.RADICAL
                         OR
                         CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE EMP.RADICAL + '%'
@@ -283,40 +249,6 @@ EXECUTE(@sqlExcel)
     FROM
         CLI
         JOIN EMP ON EMP.LENGTH_RADICAL >= CLI.LENGTH_RADICAL
-                  AND
-                  (
-                     (
-                       CLI.LENGTH_RADICAL = EMP.LENGTH_RADICAL
-                     )
-                     OR
-                     (
-                       CLI.LENGTH_RADICAL = 3 AND EMP.LENGTH_RADICAL <= 100
-                     )
-                     OR
-                     (
-                       CLI.LENGTH_RADICAL = 4 AND EMP.LENGTH_RADICAL <= 100
-                     )
-                     OR
-                     (
-                       CLI.LENGTH_RADICAL = 5 AND EMP.LENGTH_RADICAL <= 100
-                     )
-                     OR
-                     (
-                       CLI.LENGTH_RADICAL = 6 AND EMP.LENGTH_RADICAL <= 100
-                     )
-                     OR
-                     (
-                       CLI.LENGTH_RADICAL = 7 AND EMP.LENGTH_RADICAL <= 100
-                     )
-                     OR
-                     (
-                       CLI.LENGTH_RADICAL = 8 AND EMP.LENGTH_RADICAL <= 100
-                     )
-                     OR
-                     (
-                       CLI.LENGTH_RADICAL = 9 AND EMP.LENGTH_RADICAL <= 100
-                     )
-                  )
                   AND
                   (
                     EMP.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = CLI.RADICAL
