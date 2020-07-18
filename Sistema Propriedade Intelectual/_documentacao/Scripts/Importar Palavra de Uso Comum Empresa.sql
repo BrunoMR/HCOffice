@@ -2,7 +2,7 @@ DECLARE
   @sqlExcel NVARCHAR(MAX),
   @fileOfClient VARCHAR(2000)
 
-  SET @fileOfClient = 'D:\Development\Tests\TermoUsoComumNomeEmpresarial.xlsx'
+  SET @fileOfClient = 'C:\Users\bruno.machado\Google Drive\3D3\Sistema Marcas e Patentes\Colidência empresa\TermoUsoComumNomeEmpresarial_05072020.xlsx'
 
 SET @sqlExcel = '
 INSERT INTO PALAVRA_USO_COMUM_EMPRESARIAL

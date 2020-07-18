@@ -5,8 +5,8 @@ DECLARE
   @collidenceClientIntoCompany BIT = 1,
   @collidenceCompanyIntoClient BIT = 0
 
-  SET @fileOfCompanys = 'D:\Development\Tests\EmpresaGeraLtESTE.xlsx'
-  SET @fileOfClient = 'D:\Development\Tests\TesteNE.xlsx'
+  SET @fileOfCompanys = 'D:\Development\Tests\EmpresaGeral22042020b - Teste.xlsx'
+  SET @fileOfClient = 'D:\Development\Tests\Ricci30042020.xlsx'
 
    SET @sqlExcel = '
   INSERT INTO Empresa
@@ -24,13 +24,13 @@ DECLARE
     SELECT
      CAST(ROW_NUMBER() OVER(ORDER BY EMPRESA ASC) AS VARCHAR(20)) AS Id,
      dbo.RemoveFirstCharacter(CONSTITUICAO) AS CONSTITUICAO,
-     dbo.RemoveCommonWordsWithoutClassVerified(EMPRESA),
-     EMPRESA,
+     NULL AS EMPRESA,
+     dbo.RemoveFirstCharacter(EMPRESA),
      OBJETO,
      dbo.RemoveFirstCharacter(PUBLICACAO) AS PUBLICACAO,
      dbo.RemoveFirstCharacter(NIREPROTOCOLO) AS NIREPROTOCOLO,
      UF,
-     dbo.ORTOGRAFAR(dbo.RemoveCommonWordsWithoutClassVerified(EMPRESA)) AS ORTOGRAFIA
+     NULL AS ORTOGRAFIA
     FROM
      OPENROWSET(''Microsoft.ACE.OLEDB.12.0'', ''Excel 12.0 XML;Database='+ @fileOfCompanys +';HDR=YES'', ''SELECT * FROM   [EMPRESA$]'') EMP
     WHERE
@@ -58,9 +58,9 @@ insert into CLIENT_COMPANY
  )
 Select
 	dbo.RemoveFirstCharacter(Processo)								AS [Processo],
-  dbo.RemoveCommonWordsWithoutClassVerified(Marca)                      AS [MarcaModificada],
-  Marca										                        AS [Marca(Cliente)],
-  dbo.ORTOGRAFAR(dbo.RemoveCommonWordsWithoutClassVerified(Marca))  AS MarcaOrtografada,
+  NULL AS [MarcaModificada],
+  dbo.RemoveFirstCharacter(Marca)			                        AS [Marca(Cliente)],
+  NULL  AS MarcaOrtografada,
 	dbo.RemoveFirstCharacter(Classe)                                AS [Classe],
 	CONVERT(VARCHAR, dbo.RemoveFirstCharacter([DEPÓSITO]), 103)		AS [Data Depósito],
 	Titular										                    AS [Titular],
@@ -78,6 +78,21 @@ FROM
 
 
 EXECUTE(@sqlExcel)
+
+
+    -- Remove company common words
+    UPDATE
+        Empresa
+    SET
+        EMPRESA = dbo.RemoveCommonWordsWithoutClassVerified(EMPRESA_ORIGINAL),
+        ORTOGRAFIA = dbo.ORTOGRAFAR(dbo.RemoveCommonWordsWithoutClassVerified(EMPRESA_ORIGINAL))
+
+    -- Remove client common words
+    UPDATE
+        CLIENT_COMPANY
+    SET
+        MarcaModificada = dbo.RemoveCommonWordsWithoutClassVerified([Marca(Cliente)]),
+        MarcaOrtografada = dbo.ORTOGRAFAR(dbo.RemoveCommonWordsWithoutClassVerified([Marca(Cliente)]))
 
 
     INSERT into PROCESSO_RADICAL
@@ -176,6 +191,7 @@ EXECUTE(@sqlExcel)
         JOIN PROCESSO_RADICAL     PRR ON PRR.ID_TIPO_PROCESSO_RADICAL IN (1)
                                             AND PRR.NUMERO_PROCESSO = CLC.Processo
                                             AND PRR.LENGTH_RADICAL > 1
+        and prr.RADICAL = 'XDOISERO'
     )
 
 --     Radicais da empresa contidos no do Cliente
@@ -198,38 +214,41 @@ EXECUTE(@sqlExcel)
           UF
         )
 
-      SELECT
-        CLI.[Marca(Cliente)],
-        CLI.[Classe],
-        CLI.[Data Depósito],
-        CLI.[Processo],
-        CLI.[Titular],
-        CLI.[Especificacao],
-        CLI.[Referência/Pasta],
-        CLI.[Escritório Responsável],
-        CLI.[Advogado Responsável],
-
-        EMP.EMPRESA,
-        EMP.CONSTITUICAO,
-        EMP.OBJETO,
-        EMP.PUBLICACAO,
-        EMP.NIREPROTOCOLO,
-        EMP.UF
-      FROM
-        EMP
-        JOIN CLI ON CLI.LENGTH_RADICAL >= EMP.LENGTH_RADICAL
-                      AND
-                      (
-                        CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = EMP.RADICAL
-                        OR
-                        CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE EMP.RADICAL + '%'
-                        OR
-                        CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + EMP.RADICAL
-                      )
-    UNION
+--       SELECT
+--         CLI.[Marca(Cliente)],
+--         CLI.[Classe],
+--         CLI.[Data Depósito],
+--         CLI.[Processo],
+--         CLI.[Titular],
+--         CLI.[Especificacao],
+--         CLI.[Referência/Pasta],
+--         CLI.[Escritório Responsável],
+--         CLI.[Advogado Responsável],
+--
+--         EMP.EMPRESA,
+--         EMP.CONSTITUICAO,
+--         EMP.OBJETO,
+--         EMP.PUBLICACAO,
+--         EMP.NIREPROTOCOLO,
+--         EMP.UF
+--       FROM
+--         EMP
+--         JOIN CLI ON CLI.LENGTH_RADICAL >= EMP.LENGTH_RADICAL
+--                       AND
+--                       (
+--                         CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = EMP.RADICAL
+--                         OR
+--                         CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE EMP.RADICAL + '%'
+--                         OR
+--                         CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + EMP.RADICAL
+--                       )
+--     UNION
 
     -- Radicais da Cliente contidos no da Empresa
     SELECT
+--         CLI.RADICAL as radcli,
+--         EMP.RADICAL as radempresa,
+
         CLI.[Marca(Cliente)],
         CLI.[Classe],
         CLI.[Data Depósito],
@@ -249,14 +268,15 @@ EXECUTE(@sqlExcel)
     FROM
         CLI
         JOIN EMP ON EMP.LENGTH_RADICAL >= CLI.LENGTH_RADICAL
-                  AND
-                  (
-                    EMP.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = CLI.RADICAL
-                    OR
-                    EMP.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE CLI.RADICAL + '%'
-                    OR
-                    EMP.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + CLI.RADICAL
-                  );
+                    AND EMP.RADICAL = CLI.RADICAL
+--                   AND
+--                   (
+--                     EMP.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = CLI.RADICAL
+-- --                     OR
+-- --                     EMP.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE CLI.RADICAL + '%'
+-- --                     OR
+-- --                     EMP.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 LIKE '%' + CLI.RADICAL
+--                   );
 
     SELECT
       DISTINCT
