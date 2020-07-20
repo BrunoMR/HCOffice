@@ -157,7 +157,7 @@ DECLARE
         RAD.ID_TIPO_PROCESSO_RADICAL
     FROM
         CLIENT_PROCESSES    CLI
-        cross apply dbo.RadicalsProcessByWord(Processo, MarcaOrtografada, 0, 0, 1) RAD
+        cross apply dbo.RadicalsProcessByWord(Processo, MarcaOrtografada, 1, 0, 1) RAD
     UNION
 
     SELECT
@@ -180,7 +180,7 @@ DECLARE
         RAD.ID_TIPO_PROCESSO_RADICAL
     FROM
         PROCESS_TO_COLLIDE PRO
-        cross apply dbo.RadicalsProcessByWord(PRO.NUMERO, PRO.MARCA_ORTOGRAFADA, 0, 0, 1) RAD
+        cross apply dbo.RadicalsProcessByWord(PRO.NUMERO, PRO.MARCA_ORTOGRAFADA, 1, 0, 1) RAD
 
     UNION
 
@@ -580,6 +580,45 @@ DECLARE
         JOIN CLASSE_AFINIDADE CLF ON CLF.NUMERO_CLASSE_A = CLI.class
                                    AND CLF.NUMERO_CLASSE_B = PRO.Class
 
+    INSERT INTO #COLLIDED_PROCESS
+    (ID_PROCESSO, [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
+     [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, Class, [Data Depósito], [Data Concessão], Processo, Titular,
+     Procurador)
+    SELECT
+        DISTINCT
+        PRO.IdProcesso,
+        6                          AS [Tipo Colidência],
+        PRO.MARCA				   AS [Marca(RPI)],
+        CLI.MarcaOriginal		   AS [Marca(Cliente)],
+
+        CLI.Classe                 AS [Classe(Cliente)],
+        CLI.Deposito               AS [Data Depósito(Cliente)],
+        CLI.Concessao              AS [Data Concessão(Cliente)],
+        CLI.Processo               AS [Processo(Cliente)],
+        CLI.Titular                AS [Titular(Cliente)],
+        CLI.Pasta				   AS [Referência/Pasta],
+        CLI.Responsavel			   AS [Escritório Responsável],
+        CLI.Advogado               AS [Advogado Responsável],
+
+        PRO.CODIGO                 AS [Despacho],
+        PRO.ClassFormated		   AS [Classe],
+        PRO.Class		           AS [Class],
+        PRO.DataDeposito           AS [Data Depósito],
+        PRO.DataConcessao          AS [Data Depósito],
+        PRO.NUMERO				   AS [Processo],
+        PRO.NomeTitular		       AS [Titular],
+        PRO.NomeProcurador         AS [Procurador]
+      FROM
+        CLIENT_TO_COLLIDE               CLI
+        JOIN PROCESS_TO_COLLIDE_FULL    PRO ON PRO.IdTipoProcessoRadical = 3
+                                                AND CLI.IdTipoProcessoRadical = 5
+                                                AND PRO.LengthRadical >= CLI.LengthRadical
+                    AND
+                    (
+                      PRO.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = CLI.RADICAL
+                    )
+        JOIN CLASSE_AFINIDADE CLF ON CLF.NUMERO_CLASSE_A = CLI.class
+                                   AND CLF.NUMERO_CLASSE_B = PRO.Class
 
 
     -- Radicais da RPI contidos no do cliente
@@ -823,6 +862,45 @@ DECLARE
       JOIN CLASSE_AFINIDADE CLF ON CLF.NUMERO_CLASSE_A = PRO.Class
                                    AND CLF.NUMERO_CLASSE_B = CLI.class
 
+    INSERT INTO #COLLIDED_PROCESS
+    (ID_PROCESSO, [Tipo Colidência], [Marca(RPI)], [Marca(Cliente)], [Classe(Cliente)], [Data Depósito(Cliente)], [Data Concessão(Cliente)], [Processo(Cliente)], [Titular(Cliente)],
+     [Referência/Pasta], [Escritório Responsável], [Advogado Responsável], Despacho, Classe, Class, [Data Depósito], [Data Concessão], Processo, Titular,
+     Procurador)
+    SELECT
+        DISTINCT
+        PRO.IdProcesso,
+        6                          AS [Tipo Colidência],
+        PRO.MARCA				   AS [Marca(RPI)],
+        CLI.MarcaOriginal		   AS [Marca(Cliente)],
+
+        CLI.Classe                 AS [Classe(Cliente)],
+        CLI.Deposito               AS [Data Depósito(Cliente)],
+        CLI.Concessao              AS [Data Concessão(Cliente)],
+        CLI.Processo               AS [Processo(Cliente)],
+        CLI.Titular                AS [Titular(Cliente)],
+        CLI.Pasta				   AS [Referência/Pasta],
+        CLI.Responsavel			   AS [Escritório Responsável],
+        CLI.Advogado               AS [Advogado Responsável],
+
+        PRO.CODIGO                 AS [Despacho],
+        PRO.ClassFormated		   AS [Classe],
+        PRO.Class		           AS [Class],
+        PRO.DataDeposito           AS [Data Depósito],
+        PRO.DataConcessao          AS [Data Depósito],
+        PRO.NUMERO				   AS [Processo],
+        PRO.NomeTitular		       AS [Titular],
+        PRO.NomeProcurador         AS [Procurador]
+    FROM
+      PROCESS_TO_COLLIDE_FULL   PRO
+      JOIN CLIENT_TO_COLLIDE    CLI ON CLI.IdTipoProcessoRadical = 3
+                                        AND PRO.IdTipoProcessoRadical = 5
+                                        AND CLI.LengthRadical >= PRO.LengthRadical
+                    AND
+                    (
+                      CLI.RADICAL COLLATE SQL_Latin1_General_CP850_BIN2 = PRO.RADICAL
+                    )
+      JOIN CLASSE_AFINIDADE CLF ON CLF.NUMERO_CLASSE_A = PRO.Class
+                                   AND CLF.NUMERO_CLASSE_B = CLI.class
 
     SELECT
 

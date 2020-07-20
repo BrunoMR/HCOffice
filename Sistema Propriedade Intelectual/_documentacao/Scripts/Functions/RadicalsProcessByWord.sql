@@ -8,7 +8,7 @@
 -- from
 --     dbo.RadicalsProcessByWord('123456789', 'bruno', 0, 0)
 -- =============================================
-CREATE FUNCTION dbo.RadicalsProcessByWord
+ALTER FUNCTION dbo.RadicalsProcessByWord
 (
     @processoNumero VARCHAR(20),
     @word NVARCHAR(255),
@@ -57,48 +57,23 @@ BEGIN
   IF (@withPreffixAndSuffix = 1)
     BEGIN
 
-      -- Make and insert the preffix and suffix
-      SELECT
-        @amountCharacters =
-          CASE
-            WHEN @lengthWord = 3
-              THEN
-                2
-            WHEN (@lengthWord >= 4 AND @lengthWord <= 6)
-              THEN
-                3
-            WHEN (@lengthWord >= 7 AND @lengthWord <= 9)
-              THEN
-                4
-            WHEN (@lengthWord >= 10 AND @lengthWord <= 12)
-              THEN
-                4
-            WHEN (@lengthWord >= 13 AND @lengthWord <= 16)
-              THEN
-                5
-            WHEN (@lengthWord >= 17)
-              THEN
-                6
-          END
-
-      INSERT INTO @radicalProdcess
-      (
-        NUMERO_PROCESSO,
-        RADICAL,
-        LENGTH_RADICAL,
-        MAIN
-      )
-      SELECT
-        @processoNumero,
-        LEFT(@word, @amountCharacters),
-        @amountCharacters,
-        1
-      UNION
+        INSERT INTO @radicalProdcess
+          (
+            NUMERO_PROCESSO,
+            RADICAL,
+            LENGTH_RADICAL,
+            MAIN,
+            ID_TIPO_PROCESSO_RADICAL
+          )
         SELECT
-        @processoNumero,
-        RIGHT(@word, @amountCharacters),
-        @amountCharacters,
-        1
+            @processoNumero,
+            PrefixSufix,
+            Size,
+            0,
+            dbo.GetRadicalType('Termos Prefixo/Sufixo')
+        FROM
+            GetPrefixSufixSizes(@word)
+            cross apply GetPrefixSufixByAmount(@word, Size)
 
       -- END Make and insert the preffix and suffix
 

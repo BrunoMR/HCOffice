@@ -3,7 +3,7 @@
 -- Create date: 25/08/2018
 -- Description:	Esta função irá retornar o Id do tipo de processo desejado, se não encontrar irá retornar o ID do tipo de termos modificados
 -- =============================================
-CREATE FUNCTION GetRadicalType
+ALTER FUNCTION GetRadicalType
 (
 	@descriptionToSearch VARCHAR(50)
 )
