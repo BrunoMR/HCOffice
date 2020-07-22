@@ -14,7 +14,8 @@ ALTER FUNCTION dbo.RadicalsProcessByWord
     @word NVARCHAR(255),
     @withPreffixAndSuffix BIT,
     @justMainTerm BIT,
-    @fullMainTerm BIT = 0
+    @fullMainTerm BIT = 0,
+    @cuttedTerm BIT = 0
 )
 RETURNS @output TABLE
     (
@@ -74,6 +75,31 @@ BEGIN
         FROM
             GetPrefixSufixSizes(@word)
             cross apply GetPrefixSufixByAmount(@word, Size)
+
+      -- END Make and insert the preffix and suffix
+
+    END
+
+  IF (@cuttedTerm = 1)
+    BEGIN
+
+        INSERT INTO @radicalProdcess
+          (
+            NUMERO_PROCESSO,
+            RADICAL,
+            LENGTH_RADICAL,
+            MAIN,
+            ID_TIPO_PROCESSO_RADICAL
+          )
+        SELECT
+            @processoNumero,
+            Term,
+            Size,
+            0,
+            dbo.GetRadicalType('Termos Cortados')
+        FROM
+            GetRadicalSizes(@word)
+            cross apply SplitStringByAmountCharacteres(@word, Size)
 
       -- END Make and insert the preffix and suffix
 

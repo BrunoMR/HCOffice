@@ -3,7 +3,7 @@
 -- Create date: 17/09/2019
 -- Description:	Este procedimento quebra e ortografa cada termo da marca e cria os radicais para cada termo
 -- =============================================
-CREATE FUNCTION [dbo].[BuildBrandRadicalsByWord]
+ALTER FUNCTION [dbo].[BuildBrandRadicalsByWord]
 (
     @processNumber          VARCHAR(20),
     @brand                  NVARCHAR(1000),
@@ -35,7 +35,7 @@ BEGIN
         RAD.ID_TIPO_PROCESSO_RADICAL
     FROM
         dbo.SplitString(@brand, ' ')  SPD
-        CROSS APPLY dbo.RadicalsProcessByWord(@processNumber, dbo.ORTOGRAFAR(splitData), @withPreffixAndSuffix, @justMainTerm, 0) RAD
+        CROSS APPLY dbo.RadicalsProcessByWord(@processNumber, dbo.ORTOGRAFAR(splitData), @withPreffixAndSuffix, @justMainTerm, 0, 0) RAD
     WHERE
       dbo.ORTOGRAFAR(splitData) IS NOT NULL
       AND LEN(dbo.ORTOGRAFAR(splitData)) >=5

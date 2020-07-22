@@ -5,41 +5,32 @@
 -- =============================================
 ALTER FUNCTION [dbo].[SplitStringByAmountCharacteres]
 (
-    @string NVARCHAR(MAX),
-    @amountCharacteres INT
+    @string VARCHAR(1000),
+    @amountCharacteres smallint
 )
 RETURNS @output TABLE(Term NVARCHAR(20)
 )
 BEGIN
     DECLARE
-      @start INT,
-      @end INT,
-	  @amountAuxiliar INT
+      @count smallint,
+      @timesToRepeat smallint
 
     SELECT
       @string = UPPER(LTRIM(RTRIM(@string)))
 
     SELECT
-      @start = 1,
-      @end = 0
+      @count = 1,
+      @timesToRepeat = LEN(@string) - (@amountCharacteres - 1)
 
-    WHILE LEN(@string) >= @start
-      BEGIN
-		SET @amountAuxiliar = LEN(LTRIM(RTRIM(SUBSTRING(@string, @start, @amountCharacteres))));
+    WHILE @count <= @timesToRepeat
+        BEGIN
 
-        IF (@end = 0 OR @amountAuxiliar >= @amountCharacteres)
-            BEGIN
-                INSERT INTO @output
-                VALUES(LTRIM(RTRIM(SUBSTRING(@string, @start, @amountCharacteres))))
-            END
+            INSERT INTO @output
+            VALUES(LTRIM(RTRIM(SUBSTRING(@string, @count, @amountCharacteres))))
 
-        SET @end = LEN(@string) - (@amountCharacteres - 1)
-        IF (@end <= 0)
-          SET @end = LEN(@string)
+            SET @count = @count + 1
+        END
 
-        SET @string = LTRIM(RTRIM(SUBSTRING(@string, @amountCharacteres + 1, @end)))
-
-      END
     RETURN
 END
 go
