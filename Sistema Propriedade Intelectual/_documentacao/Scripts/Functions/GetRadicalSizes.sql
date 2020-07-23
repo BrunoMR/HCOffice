@@ -7,7 +7,7 @@ CREATE FUNCTION [dbo].[GetRadicalSizes]
 (
     @string VARCHAR(1000)
 )
-RETURNS @output TABLE(Size smallint)
+RETURNS @output TABLE(Size smallint, Bigger smallint)
 BEGIN
     DECLARE
       @amountCharacteres smallint
@@ -38,6 +38,11 @@ BEGIN
 
         IF(@amountCharacteres >= 16)
             INSERT INTO @output (Size) VALUES (10)
+
+    update
+        @output
+    set
+        Bigger = (select max(Size) from @output)
 
     RETURN
 END
