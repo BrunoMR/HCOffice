@@ -5,7 +5,7 @@
 -- Ex:
 -- SELECT dbo.RemoveCommonWords('bruno opa machado teste cabelo no sofa as vezes EITa opa MAIS UMA vez cabelo', 'N0941')
 -- =============================================
-CREATE FUNCTION [dbo].[RemoveCommonWords]
+CREATE FUNCTION dbo.RemoveCommonWords
 (
     @word   VARCHAR(255),
     @class  VARCHAR(10)
@@ -62,3 +62,5 @@ BEGIN
 
   RETURN UPPER(@word)
 END
+go
+
