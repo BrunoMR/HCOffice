@@ -3,7 +3,7 @@
 -- Create date: 19/07/2020
 -- Description:	Esta função irá retornar os tamanhos de radicais que a palavra deve criar
 -- =============================================
-CREATE FUNCTION [dbo].[GetRadicalSizes]
+ALTER FUNCTION [dbo].[GetRadicalSizes]
 (
     @string VARCHAR(1000)
 )

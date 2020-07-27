@@ -8,7 +8,7 @@
 -- from
 --     dbo.RadicalsProcessByWord('123456789', 'bruno', 0, 0)
 -- =============================================
-ALTER FUNCTION dbo.RadicalsProcessByWord
+CREATE FUNCTION dbo.RadicalsProcessByWord
 (
     @processoNumero VARCHAR(20),
     @word NVARCHAR(255),
@@ -23,7 +23,8 @@ RETURNS @output TABLE
         RADICAL                     NVARCHAR(255) NOT NULL,
         LENGTH_RADICAL              INT NOT NULL,
         MAIN                        BIT NOT NULL,
-        ID_TIPO_PROCESSO_RADICAL    INT
+        ID_TIPO_PROCESSO_RADICAL    INT,
+        BIGGER                      BIT DEFAULT 0
     )
 AS
 BEGIN
@@ -31,10 +32,10 @@ BEGIN
   DECLARE
     @lengthWord INT = LEN(@word),
     @amountCharacters INT,
-    @radicalProdcess PROCESSORADICALTYPE
+    @radicalProcess PROCESSORADICALTYPE
 
   -- Insert the full term as main
-  INSERT INTO @radicalProdcess
+  INSERT INTO @radicalProcess
   (
     NUMERO_PROCESSO,
     RADICAL,
@@ -58,20 +59,22 @@ BEGIN
   IF (@withPreffixAndSuffix = 1)
     BEGIN
 
-        INSERT INTO @radicalProdcess
+        INSERT INTO @radicalProcess
           (
             NUMERO_PROCESSO,
             RADICAL,
             LENGTH_RADICAL,
             MAIN,
-            ID_TIPO_PROCESSO_RADICAL
+            ID_TIPO_PROCESSO_RADICAL,
+            BIGGER
           )
         SELECT
             @processoNumero,
             PrefixSufix,
             Size,
             0,
-            dbo.GetRadicalType('Termos Prefixo/Sufixo')
+            Type,
+            case when Bigger = Size then 1 else 0 end
         FROM
             GetPrefixSufixSizes(@word)
             cross apply GetPrefixSufixByAmount(@word, Size)
@@ -83,20 +86,22 @@ BEGIN
   IF (@cuttedTerm = 1)
     BEGIN
 
-        INSERT INTO @radicalProdcess
+        INSERT INTO @radicalProcess
           (
             NUMERO_PROCESSO,
             RADICAL,
             LENGTH_RADICAL,
             MAIN,
-            ID_TIPO_PROCESSO_RADICAL
+            ID_TIPO_PROCESSO_RADICAL,
+            BIGGER
           )
         SELECT
             @processoNumero,
             Term,
             Size,
             0,
-            dbo.GetRadicalType('Termos Cortados')
+            dbo.GetRadicalType('Termos Cortados'),
+            case when Bigger = Size then 1 else 0 end
         FROM
             GetRadicalSizes(@word)
             cross apply SplitStringByAmountCharacteres(@word, Size)
@@ -107,7 +112,7 @@ BEGIN
 
   IF ((@justMainTerm = 0) AND (@lengthWord = 4))
     BEGIN
-        INSERT INTO @radicalProdcess
+        INSERT INTO @radicalProcess
         (
           NUMERO_PROCESSO,
           RADICAL,
@@ -151,7 +156,7 @@ BEGIN
 
 				-- Substituição de caracteres
                 SET @radical = LTRIM(RTRIM(STUFF(@word, @count, @length, @replaceExpression)))
-                INSERT INTO @radicalProdcess
+                INSERT INTO @radicalProcess
                 (
                   NUMERO_PROCESSO,
                   RADICAL,
@@ -182,7 +187,7 @@ BEGIN
 
                         SET @radical = STUFF(@word, @count, @length, @replaceLetterWithExpression)
 
-                        INSERT INTO @radicalProdcess
+                        INSERT INTO @radicalProcess
                         (
                           NUMERO_PROCESSO,
                           RADICAL,
@@ -235,7 +240,7 @@ BEGIN
                     IF (@count <= @end)
                     BEGIN
                     SET @radical = LTRIM(RTRIM(STUFF(@word, @count, @length, @replaceExpression)))
-                    INSERT INTO @radicalProdcess
+                    INSERT INTO @radicalProcess
                     (
                       NUMERO_PROCESSO,
                       RADICAL,
@@ -265,7 +270,7 @@ BEGIN
 				  SET @replaceLetterWithExpression = @replaceExpression + @currentLetter;
 				  SET @radical = STUFF(@word, @count, 1, @replaceLetterWithExpression);
 
-				  INSERT INTO @radicalProdcess
+				  INSERT INTO @radicalProcess
 				  (
 					NUMERO_PROCESSO,
 					RADICAL,
@@ -299,16 +304,17 @@ BEGIN
     END
 
   INSERT INTO @output
-  (NUMERO_PROCESSO, RADICAL, LENGTH_RADICAL, MAIN, ID_TIPO_PROCESSO_RADICAL)
+  (NUMERO_PROCESSO, RADICAL, LENGTH_RADICAL, MAIN, ID_TIPO_PROCESSO_RADICAL, BIGGER)
   SELECT
     DISTINCT
     NUMERO_PROCESSO,
     RADICAL,
     LENGTH_RADICAL,
     MAIN,
-    ID_TIPO_PROCESSO_RADICAL
+    ID_TIPO_PROCESSO_RADICAL,
+    BIGGER
   FROM
-    @radicalProdcess
+    @radicalProcess
 
     RETURN
 
