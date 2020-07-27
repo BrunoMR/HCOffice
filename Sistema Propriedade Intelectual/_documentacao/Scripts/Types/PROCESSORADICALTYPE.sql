@@ -19,7 +19,6 @@ BEGIN
 		BIGGER                   bit default 0
 		primary key nonclustered (Id)
 	)
-	go
 
 	PRINT 'O Type "PROCESSORADICALTYPE" foi criado com sucesso'
 END

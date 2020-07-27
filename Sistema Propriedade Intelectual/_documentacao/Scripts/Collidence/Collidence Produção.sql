@@ -1,11 +1,18 @@
 DECLARE
-  @rpi INT,
-  @fileOfClient VARCHAR(2000)
+    @rpi INT,
+    @fileOfClient VARCHAR(2000),
+    @excludedClass int = (select TIPO from TIPO_SITUACAO_CLASSE where DESCRICAO = 'Exclusão'),
+    @imagesBrand int = (select ID from TIPO_APRESENTACAO where DESCRICAO = 'Figurativa'),
+    @IdClientRemovedCommonWords int,
+    @RemovedClientCommonWords varchar(255),
+    @IdProcessRemovedCommonWords int,
+    @RemovedProcessCommonWords varchar(255)
+
 
 	SET NOCOUNT ON;
 
 	SET @rpi = 2575
-	SET @fileOfClient = 'D:\Development\Tests\_Processos do Cliente Multi-classes.xlsx' --'D:\Guerra.xlsx'
+	SET @fileOfClient = 'D:\Development\Tests\Ricci30042020.xlsx' --'D:\Guerra.xlsx'
 
   --BEGIN TRY
   -- Query Executa processamento da colidência RPI Azure_New - Regra LONGA
@@ -83,26 +90,29 @@ DECLARE
 
     insert into PROCESS_TO_COLLIDE
     (ID_PROCESSO, NUMERO, MARCA, MARCA_ORTOGRAFADA, MARCA_SEM_VOGAIS,
-     NOME_TITULAR, DATA_DEPOSITO, DATA_CONCESSAO, CODIGO, NOME_PROCURADOR)
+     NOME_TITULAR, DATA_DEPOSITO, DATA_CONCESSAO, CODIGO, NOME_PROCURADOR, ClassFormated, Class, Specification)
 	SELECT
         PRC.ID_PROCESSO,
         PRO.NUMERO,
         PRO.MARCA,
-        dbo.ORTOGRAFAR(PRO.MARCA) AS MARCA_ORTOGRAFADA,
-        replace(PRO.MARCA_SEM_VOGAIS, ' ', '') AS MARCA_SEM_VOGAIS,
+	    null as MARCA_ORTOGRAFADA,
+	    null as MARCA_SEM_VOGAIS,
         PRO.NOME_TITULAR,
         CONVERT(VARCHAR, PRO.DATA_DEPOSITO, 103) AS DATA_DEPOSITO,
         CONVERT(VARCHAR, PRO.DATA_CONCESSAO, 103) AS DATA_CONCESSAO,
         DES.CODIGO,
-        PRO.NOME_PROCURADOR
+        PRO.NOME_PROCURADOR,
+	    dbo.FormatClassesAfterUnified(PCL.NUMERO_CLASSE),
+        PCL.NUMERO_CLASSE,
+        PCL.ESPECIFICAO
 	FROM
 		PROCESSO_DESPACHO_COLIDI 	PRC
         JOIN PROCESSO				PRO ON PRC.NUMERO_RPI = @rpi
-                                            AND PRO.TIPO_APRESENTACAO != 3
+                                            AND PRO.TIPO_APRESENTACAO != @imagesBrand
                                             AND PRO.MARCA IS NOT NULL
                                             AND PRO.ID = PRC.ID_PROCESSO
         JOIN DESPACHO               DES ON DES.ID = PRC.ID_DESPACHO
-
+        JOIN PROCESSO_CLASSE        PCL on PCL.ID_PROCESSO = PRC.ID_PROCESSO AND PCL.TIPO != @excludedClass
 	  WHERE
 		NOT EXISTS(
 			  		SELECT
@@ -129,32 +139,75 @@ DECLARE
 	FROM
 		CLIENT_PROCESSES CLP
 		CROSS APPLY dbo.GetProcessAndClassesFromFile(CLP.Processo, CLP.Classe) AS CLA
-	-- CROSS APPLY dbo.FormatClassesFromFile(CLP.Classe) AS CLA
 	-- END Join client processes and their classes
 
 	-- Remove common words of client processes
-	update
-		CLP
-	set
-        CLP.Marca = dbo.RemoveCommonWords(CLP.MarcaOriginal, CLC.class),
-        CLP.MarcaOrtografada = dbo.ORTOGRAFAR(dbo.RemoveCommonWords(CLP.MarcaOriginal, CLC.class)),
-        CLP.MarcaSemVogais = dbo.REMOVER_VOGAIS(dbo.RemoveCommonWords(CLP.MarcaOriginal, CLC.class))
+    declare cur_Client_Common_words cursor local for
+    select
+        CLP.ID,
+        dbo.RemoveCommonWords(CLP.MarcaOriginal, CLC.class) as RemovedClientCommonWords
 	from
 		CLIENT_PROCESSES CLP
 		join #CLIENT_PROCESSES_CLASS CLC on CLC.Processo = CLP.Processo
+
+    for update of CLP.Marca, CLP.MarcaOrtografada, CLP.MarcaSemVogais
+    open cur_Client_Common_words
+    fetch next from cur_Client_Common_words
+    into @IdClientRemovedCommonWords, @RemovedClientCommonWords
+
+    while (@@fetch_status = 0)
+        begin
+
+            update
+                CLIENT_PROCESSES
+            set
+                Marca = @RemovedClientCommonWords,
+                MarcaOrtografada = dbo.ORTOGRAFAR(@RemovedClientCommonWords),
+                MarcaSemVogais = dbo.REMOVER_VOGAIS(@RemovedClientCommonWords)
+            where
+                ID = @IdClientRemovedCommonWords
+
+            fetch next from cur_Client_Common_words
+            into @IdClientRemovedCommonWords, @RemovedClientCommonWords
+        end
+
+    close cur_Client_Common_words
+    deallocate cur_Client_Common_words
+
 	-- END Remove common words of client processes
 
 
 	-- Remove common words of RPI processes
-    update
-        PRC
-    set
-        PRC.MarcaModificada = dbo.RemoveCommonWords(PRC.MARCA, PCL.NUMERO_CLASSE),
-        PRC.MARCA_ORTOGRAFADA = dbo.ORTOGRAFAR(dbo.RemoveCommonWords(PRC.MARCA, PCL.NUMERO_CLASSE)),
-        PRC.MARCA_SEM_VOGAIS = dbo.REMOVER_VOGAIS(dbo.RemoveCommonWords(PRC.MARCA, PCL.NUMERO_CLASSE))
-    from
+    declare cur_Process_Common_words cursor local for
+    select
+        PRC.ID_PROCESSO,
+        dbo.RemoveCommonWords(PRC.MARCA, PRC.Class) as RemovedProcessCommonWords
+	from
         PROCESS_TO_COLLIDE			  PRC
-        join PROCESSO_CLASSE          PCL on PCL.ID_PROCESSO = PRC.ID_PROCESSO AND PCL.TIPO != 4
+
+    for update of PRC.MarcaModificada, PRC.MARCA_ORTOGRAFADA, PRC.MARCA_SEM_VOGAIS
+    open cur_Process_Common_words
+    fetch next from cur_Process_Common_words
+    into @IdProcessRemovedCommonWords, @RemovedProcessCommonWords
+
+    while (@@fetch_status = 0)
+        begin
+
+            update
+                PROCESS_TO_COLLIDE
+            set
+                MarcaModificada = @RemovedProcessCommonWords,
+                MARCA_ORTOGRAFADA = dbo.ORTOGRAFAR(@RemovedProcessCommonWords),
+                MARCA_SEM_VOGAIS = dbo.REMOVER_VOGAIS(@RemovedProcessCommonWords)
+            where
+                ID_PROCESSO = @IdProcessRemovedCommonWords
+
+            fetch next from cur_Process_Common_words
+            into @IdProcessRemovedCommonWords, @RemovedProcessCommonWords
+        end
+
+    close cur_Process_Common_words
+    deallocate cur_Process_Common_words
 	-- END Remove common words of RPI processes
 
 	-- Build the Radicais of CLIENT PROCESSES
@@ -243,9 +296,9 @@ DECLARE
         PRRS.BIGGER,
         LEN(CLPS.Marca)
     FROM
-      CLIENT_PROCESSES		       CLPS
-      JOIN PROCESSO_RADICAL      PRRS ON PRRS.NUMERO_PROCESSO = CLPS.Processo
-      LEFT JOIN #CLIENT_PROCESSES_CLASS  CPC ON CPC.Processo = CLPS.Processo
+      CLIENT_PROCESSES		                CLPS
+      JOIN PROCESSO_RADICAL                 PRRS ON PRRS.NUMERO_PROCESSO = CLPS.Processo
+      LEFT JOIN #CLIENT_PROCESSES_CLASS     CPC ON CPC.Processo = CLPS.Processo
 
     -- END Build the client to collide
 
@@ -274,16 +327,15 @@ DECLARE
         PRC.NOME_PROCURADOR,
         PRC.MARCA_SEM_VOGAIS,
         LEN(PRC.MARCA_SEM_VOGAIS),
-        dbo.FormatClassesAfterUnified(PCL.NUMERO_CLASSE),
-        PCL.NUMERO_CLASSE,
-        PCL.ESPECIFICAO,
+        PRC.ClassFormated,
+        PRC.Class,
+        PRC.Specification,
         PRR.ID_TIPO_PROCESSO_RADICAL,
         PRR.BIGGER,
         LEN(PRC.MarcaModificada)
       FROM
         PROCESS_TO_COLLIDE			  PRC
         JOIN PROCESSO_RADICAL         PRR ON PRR.NUMERO_PROCESSO = PRC.NUMERO
-        join PROCESSO_CLASSE          PCL on PCL.ID_PROCESSO = PRC.ID_PROCESSO
 
     -- END Build the processes to collide full
 
@@ -1211,13 +1263,13 @@ DECLARE
       [Marca(Cliente)]
 
 
---        delete from PROCESSO_RADICAL
---        delete from CLIENT_PROCESSES
---        delete from CLIENT_TO_COLLIDE
---        delete from PROCESS_TO_COLLIDE_FULL
---        DROP TABLE #CLIENT_PROCESSES_CLASS
---        DROP TABLE  #COLLIDED_PROCESS
---        delete from PROCESS_TO_COLLIDE
+       delete from PROCESSO_RADICAL
+       delete from CLIENT_PROCESSES
+       delete from CLIENT_TO_COLLIDE
+       delete from PROCESS_TO_COLLIDE_FULL
+       DROP TABLE #CLIENT_PROCESSES_CLASS
+       DROP TABLE  #COLLIDED_PROCESS
+       delete from PROCESS_TO_COLLIDE
 
 
 	 --CTRL + K + U
