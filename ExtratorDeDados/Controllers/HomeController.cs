@@ -22,6 +22,13 @@
         /// </summary>
         private static string pathError;
 
+        private IImportFile _importFile;
+
+        public HomeController(IImportFile importFile)
+        {
+            _importFile = importFile;
+        }
+
         /// <summary>
         /// The index.
         /// </summary>
@@ -53,7 +60,8 @@
         {
             try
             {
-                var response = ImportFile.Import(path);
+                var response = _importFile.Import(path);
+                //var response = ImportFile.Import(path);
 
                 if (response.FirstOrDefault(x => x.Key.Equals("Importação")).Value)
                     this.AddToastMessage("Importação", "Arquivo importado com sucesso!", ToastType.Success);

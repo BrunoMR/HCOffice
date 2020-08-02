@@ -258,7 +258,7 @@
             }
         }
 
-        private static DataTable Creat_eDataTable(List<ProcessoImported> processos)
+        private static DataTable CreateDataTable(List<ProcessoImported> processos)
         {
             var dataTable = new DataTable();
             dataTable.Columns.Add("NUMERO", typeof(string));

@@ -61,7 +61,8 @@
         /// <returns>Returns if synchronized success</returns>
         public bool SynchronizationProcessesByAllRpis()
         {
-            var rpiNegocio = new RpiNegocio();
+            //TODO: arrumar aqui
+            var rpiNegocio = new RpiNegocio(new Cfe4Negocio(new Cfe4Repository()));
             var rpiList = rpiNegocio.GetAll();
 
             var result = false;

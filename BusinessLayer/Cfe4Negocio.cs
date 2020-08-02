@@ -8,7 +8,7 @@
     using DataLayer;
     using DTOLayer;
 
-    public class Cfe4Negocio
+    public class Cfe4Negocio : ICfe4Negocio
     {
         /// <summary>
         /// The cfe 4 repository.
@@ -87,7 +87,7 @@
         //{
         //    this._cfe4Repository.BulkUpsert(CreateDataTable(processos), transaction);
         //}
-		public static void InsertOrUpdate(List<ProcessoImported> processos, SqlTransaction transaction)
+		public void InsertOrUpdate(List<ProcessoImported> processos, SqlTransaction transaction)
 		{
 			ICfe4Repository cfe4Repository = new Cfe4Repository();
 			cfe4Repository.BulkUpsert(CreateDataTable(processos), transaction);

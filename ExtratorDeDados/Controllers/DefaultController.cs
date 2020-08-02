@@ -6,11 +6,18 @@ namespace ExtratorDeDados.Controllers
 {
     public class DefaultController : ApiController
     {
+        private IImportFile _importFile;
+
+        public DefaultController(IImportFile importFile)
+        {
+            _importFile = importFile;
+        }
+
         // GET: api/Default
         public IEnumerable<string> Get()
         {
             const string path = @"D:\Desenvolvimento\Arquivos\";
-            ImportFile.Import(path);
+            _importFile.Import(path);
             
             return new string[] { "value1", "value2" };
         }

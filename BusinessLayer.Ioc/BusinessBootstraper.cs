@@ -7,7 +7,8 @@
         public static void RegisterServices(Container container)
         {
             container.Register<IClienteNegocio, ClienteNegocio>(Lifestyle.Scoped);
-            //container.Register<ICfe4Negocio, Cfe4Negocio>(Lifestyle.Scoped);
+            container.Register<ICfe4Negocio, Cfe4Negocio>(Lifestyle.Scoped);
+            container.Register<IRpiNegocio, RpiNegocio>(Lifestyle.Scoped);
         }
     }
 }

@@ -26,14 +26,9 @@
 
         public RpiNegocio(ICfe4Negocio cfe4Negocio)
         {
-            this._cfe4Negocio = cfe4Negocio;
+            _cfe4Negocio = cfe4Negocio;
         }
-
-        public RpiNegocio()
-        {
-            
-        }
-
+        
         #region Public Methods
 
         /// <summary>The get all.</summary>
@@ -109,13 +104,13 @@
                     AddRpi(rpi, transaction);
                     
                     SqlConnection.ClearAllPools();
-                    ProcessoNegocio.BulkInsertOrUpdate(rpi.Processo, transaction);
+                    //ProcessoNegocio.BulkInsertOrUpdate(rpi.Processo, transaction);
 
-                    ProtocoloNegocio.BulkInsert(rpi.Processo, transaction);
-                    var processoDespachoList = ProcessoDespachoNegocio.BuildProcessoDespachos(rpi);
-                    ProcessoDespachoNegocio.BulkInsert(processoDespachoList, transaction);
-                    //_cfe4Negocio.InsertOrUpdate(rpi.Processo, transaction);
-					Cfe4Negocio.InsertOrUpdate(rpi.Processo, transaction);
+                    //ProtocoloNegocio.BulkInsert(rpi.Processo, transaction);
+                    //var processoDespachoList = ProcessoDespachoNegocio.BuildProcessoDespachos(rpi);
+                    //ProcessoDespachoNegocio.BulkInsert(processoDespachoList, transaction);
+                    _cfe4Negocio.InsertOrUpdate(rpi.Processo, transaction);
+                    //Cfe4Negocio.InsertOrUpdate(rpi.Processo, transaction);
                     ClasseNegocio.InsertOrUpdate(rpi.Processo, transaction);
 
                     transaction.Commit();

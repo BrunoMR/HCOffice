@@ -8,14 +8,21 @@ using Utils;
 
 namespace ExtratorDeDados.Importer
 {
-    public static class ImportFile
+    public class ImportFile : IImportFile
     {
-        public static Dictionary<string, bool> Import(string path)
+        private IRpiNegocio _rpiNegocio;
+
+        public ImportFile(IRpiNegocio rpiNegocio)
+        {
+            _rpiNegocio = rpiNegocio;
+        }
+
+        public Dictionary<string, bool> Import(string path)
         {
             var rpis = GetAllFiles(path);
 
-            var process = new RpiNegocio();
-            var validations = process.ProcessRpi(rpis);
+            //var process = new RpiNegocio();
+            var validations = _rpiNegocio.ProcessRpi(rpis);
 
             var result = new Dictionary< string, bool>();
 
@@ -42,7 +49,7 @@ namespace ExtratorDeDados.Importer
             return result;
         }
 
-        private static List<RpiImported> GetAllFiles(string path)
+        private List<RpiImported> GetAllFiles(string path)
         {
             FileNegocio.Files = Directory.GetFiles(path, "*.*", SearchOption.TopDirectoryOnly)
                 .Where(file => RegularExpressions.FilesExtensions.IsMatch(file))
@@ -51,7 +58,7 @@ namespace ExtratorDeDados.Importer
             return FileNegocio.Files.Select(ImporAnytFile).ToList();
         }
 
-        private static RpiImported ImporAnytFile(string path)
+        private RpiImported ImporAnytFile(string path)
         {
             return path.ToUpper().EndsWith(".TXT") ?
                 ImportTxt.TxtImport(path) :
