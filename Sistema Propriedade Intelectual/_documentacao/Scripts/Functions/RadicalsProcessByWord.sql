@@ -8,14 +8,15 @@
 -- from
 --     dbo.RadicalsProcessByWord('123456789', 'bruno', 0, 0)
 -- =============================================
-CREATE FUNCTION dbo.RadicalsProcessByWord
+ALTER FUNCTION dbo.RadicalsProcessByWord
 (
     @processoNumero VARCHAR(20),
     @word NVARCHAR(255),
     @withPreffixAndSuffix BIT,
     @justMainTerm BIT,
     @fullMainTerm BIT = 0,
-    @cuttedTerm BIT = 0
+    @cuttedTerm BIT = 0,
+    @originalBrand VARCHAR(255) = null
 )
 RETURNS @output TABLE
     (
@@ -31,8 +32,19 @@ BEGIN
 
   DECLARE
     @lengthWord INT = LEN(@word),
-    @amountCharacters INT,
+    @lenthOriginalBrand INT = LEN(@originalBrand),
+    @originalOrNot BIT = 0,
     @radicalProcess PROCESSORADICALTYPE
+
+    select
+        @originalOrNot =
+        case
+            when @lenthOriginalBrand is not null and @lenthOriginalBrand < 4
+                then
+                    1
+            else
+                0
+        end
 
   -- Insert the full term as main
   INSERT INTO @radicalProcess
@@ -45,18 +57,36 @@ BEGIN
   )
   SELECT
     @processoNumero,
-    @word,
-    @lengthWord,
+    case @originalOrNot
+        when 1
+            then
+                @originalBrand
+        else
+            @word
+    end,
+    case @originalOrNot
+        when 1
+            then
+                @lenthOriginalBrand
+        else
+            @lengthWord
+    end,
     1,
     case @fullMainTerm
         when 1
             then
-                dbo.GetRadicalType('Termos Completo Ortografado')
+                (case @originalOrNot
+                    when 1
+                        then
+                            dbo.GetRadicalType('Termos Completo Não Ortografado')
+                    else
+                        dbo.GetRadicalType('Termos Completo Ortografado')
+                end)
         else
             dbo.GetRadicalType('Termos Principais')
     end
 
-  IF (@withPreffixAndSuffix = 1)
+  IF (@withPreffixAndSuffix = 1 AND @lengthWord >= 4)
     BEGIN
 
         INSERT INTO @radicalProcess
@@ -77,7 +107,7 @@ BEGIN
             case when Bigger = Size then 1 else 0 end
         FROM
             GetPrefixSufixSizes(@word)
-            cross apply GetPrefixSufixByAmount(@word, Size)
+            cross apply GetPrefixSufixByAmount(@word, Size, @originalBrand)
 
       -- END Make and insert the preffix and suffix
 

@@ -3,20 +3,41 @@
 -- Create date: 19/07/2020
 -- Description:	Esta função irá retornar o prefixo e sufixo indicado da palavra envianda
 -- =============================================
-alter FUNCTION [dbo].[GetPrefixSufixByAmount]
+create FUNCTION dbo.GetPrefixSufixByAmount
 (
     @string VARCHAR(255),
-    @amountCharacteres smallint
+    @amountCharacteres smallint,
+    @originalBrand VARCHAR(255)
 )
-RETURNS TABLE
+RETURNS @output TABLE
+    (
+        PrefixSufix     VARCHAR(255),
+        Type            INT
+    )
 AS
-RETURN
+BEGIN
+    declare
+        @word varchar(255)
+
     select
-        (LTRIM(RTRIM(LEFT(@string, @amountCharacteres)))) as PrefixSufix,
+      @word = case
+                when @amountCharacteres <= 4
+                    then
+                        @originalBrand
+                else
+                    @string
+              end
+
+    insert into @output
+    select
+        (LTRIM(RTRIM(LEFT(@word, @amountCharacteres)))) as PrefixSufix,
         dbo.GetRadicalType('Termos Prefixo') as Type
     union
     select
-        (LTRIM(RTRIM(RIGHT(@string, @amountCharacteres)))) as PrefixSufix,
+        (LTRIM(RTRIM(RIGHT(@word, @amountCharacteres)))) as PrefixSufix,
         dbo.GetRadicalType('Termos Sufixo') as Type
+
+    RETURN
+END
 go
 

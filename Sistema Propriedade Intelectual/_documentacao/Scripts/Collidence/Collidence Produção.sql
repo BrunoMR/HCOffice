@@ -224,7 +224,7 @@ DECLARE
         RAD.BIGGER
     FROM
         CLIENT_PROCESSES    CLI
-        cross apply dbo.RadicalsProcessByWord(Processo, MarcaOrtografada, 1, 0, 1, 1) RAD
+        cross apply dbo.RadicalsProcessByWord(Processo, MarcaOrtografada, 1, 0, 1, 1, Marca) RAD
     UNION
 
     SELECT
@@ -249,7 +249,7 @@ DECLARE
         RAD.BIGGER
     FROM
         PROCESS_TO_COLLIDE PRO
-        cross apply dbo.RadicalsProcessByWord(PRO.NUMERO, PRO.MARCA_ORTOGRAFADA, 1, 0, 1, 1) RAD
+        cross apply dbo.RadicalsProcessByWord(PRO.NUMERO, PRO.MARCA_ORTOGRAFADA, 1, 0, 1, 1, MarcaModificada) RAD
 
     UNION
 
@@ -893,8 +893,8 @@ DECLARE
         PRO.NomeProcurador         AS [Procurador]
       FROM
         CLIENT_TO_COLLIDE               CLI
-        JOIN PROCESS_TO_COLLIDE_FULL    PRO ON PRO.IdTipoProcessoRadical = 3
-                                                AND CLI.IdTipoProcessoRadical = 3
+        JOIN PROCESS_TO_COLLIDE_FULL    PRO ON PRO.IdTipoProcessoRadical = 7
+                                                AND CLI.IdTipoProcessoRadical = 7
                                                 AND CLI.LengthRadical between 2 and 4
                                                 AND PRO.LengthRadical >= CLI.LengthRadical
                     AND
@@ -942,8 +942,8 @@ DECLARE
         PRO.NomeProcurador         AS [Procurador]
     FROM
       PROCESS_TO_COLLIDE_FULL   PRO
-      JOIN CLIENT_TO_COLLIDE    CLI ON CLI.IdTipoProcessoRadical = 3
-                                        AND PRO.IdTipoProcessoRadical = 3
+      JOIN CLIENT_TO_COLLIDE    CLI ON CLI.IdTipoProcessoRadical = 7
+                                        AND PRO.IdTipoProcessoRadical = 7
                                         AND PRO.LengthRadical between 2 and 4
                                         AND CLI.LengthRadical >= PRO.LengthRadical
                     AND
