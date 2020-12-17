@@ -256,9 +256,9 @@
                 query.AppendLine("DSI.DESCRICAO AS DespachoSituacao, ");
                 query.AppendLine("DTP.TIPO AS DespachoTipo, ");
                 query.AppendLine("DTP.DESCRICAO AS DespachoTipoDescricao, ");
-                query.AppendLine("PRI.NUMERO_RPI AS DespachoRpi, ");
-                query.AppendLine("CONVERT(DATE, PRI.DATA_DESPACHO) AS DespachoData, ");
-                query.AppendLine("PRI.COMPLEMENTO AS DespachoComplemento, ");
+                query.AppendLine("PRD.NUMERO_RPI AS DespachoRpi, ");
+                query.AppendLine("CONVERT(DATE, PRD.DATA_DESPACHO) AS DespachoData, ");
+                query.AppendLine("PRD.COMPLEMENTO AS DespachoComplemento, ");
                 query.AppendLine("PRT.NUMERO AS ProtocoloNumero, ");
                 query.AppendLine("PRT.CODIGO_SERVICO AS ProtocoloCodigo, ");
                 query.AppendLine("CONVERT(DATE, PRT.DATA) AS ProtocoloData, ");
@@ -282,8 +282,9 @@
                 query.AppendLine("LEFT JOIN PROCESSO_CLASSE     PRC ON PRC.ID_PROCESSO = PRO.ID ");
                 query.AppendLine("LEFT JOIN CLASSE              CLN ON CLN.NUMERO_CLASSE = PRC.NUMERO_CLASSE ");
                 query.AppendLine("LEFT JOIN TIPO_SITUACAO_CLASSE TSC ON TSC.TIPO = PRC.TIPO ");
-                query.AppendLine("LEFT JOIN DESPACHO            DEP ON DEP.ID = PRI.ID_DESPACHO ");
-                query.AppendLine("LEFT JOIN PROTOCOLO           PRT ON PRT.ID = PRI.ID_PROTOCOLO ");
+                query.AppendLine("LEFT JOIN PROCESSO_DESPACHO   PRD ON PRD.ID_PROCESSO = PRO.ID ");
+                query.AppendLine("LEFT JOIN DESPACHO            DEP ON DEP.ID = PRD.ID_DESPACHO ");
+                query.AppendLine("LEFT JOIN PROTOCOLO           PRT ON PRT.ID = PRD.ID_PROTOCOLO ");
                 query.AppendLine("LEFT JOIN TIPO_SITUACAO       DSI ON DSI.TIPO = DEP.SITUACAO ");
                 query.AppendLine("LEFT JOIN TIPO_DESPACHO       DTP ON DTP.TIPO = DEP.TIPO ");
                 query.AppendLine("LEFT JOIN CLASSE              CLI ON CLI.NUMERO_CLASSE = PRO.CLASSE_INTERNACIONAL ");
@@ -294,10 +295,10 @@
                 query.AppendLine("LEFT JOIN UF                  UF ON UF.SIGLA = PRO.UF_TITULAR ");
                 query.AppendLine("WHERE ");
                 query.AppendLine("PRI.NUMERO_RPI BETWEEN @startRpi AND @endRpi ");
-                query.AppendLine("ORDER BY ");
-                query.AppendLine("Numero, ");
-                query.AppendLine("DespachoRpi, ");
-                query.AppendLine("DespachoCodigo ");
+                //query.AppendLine("ORDER BY ");
+                //query.AppendLine("Numero, ");
+                //query.AppendLine("DespachoRpi, ");
+                //query.AppendLine("DespachoCodigo ");
 
                 var connection = ConnectionDapper.RetornaInstancia().AbreConexao();
                 return connection.Query<ProcessoSync>(query.ToString(), new { startRpi, endRpi }, commandTimeout: 1800).ToList();
