@@ -288,7 +288,8 @@
             dataTable.Columns.Add("DATA_VIGENCIA", typeof(DateTime));
             dataTable.Columns.Add("MARCA_SEM_VOGAIS", typeof(string));
             dataTable.Columns.Add("NUMERO_INSCRICAO_INTERNACIONAL", typeof(string));
-            dataTable.Columns.Add("DATA_RECEBIMENTO_INPI", typeof(DateTime)); 
+            dataTable.Columns.Add("DATA_RECEBIMENTO_INPI", typeof(DateTime));
+            dataTable.Columns.Add("TIPO_NATUREZA_DESCRICAO", typeof(string));
 
             try
             {
@@ -327,7 +328,8 @@
                             pro.DataVigencia.VerificarData(),
                             pro.Marca?.Nome.RetirarVogais(),
                             pro.DadosDeMadri?.NumeroInscricaoInternacional,
-                            pro.DadosDeMadri?.DataRecebimentoInpi.VerificarData());
+                            pro.DadosDeMadri?.DataRecebimentoInpi.VerificarData(),
+                            pro.Marca.Natureza);
                     });
 
 
