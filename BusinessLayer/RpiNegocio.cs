@@ -104,14 +104,13 @@
                     AddRpi(rpi, transaction);
                     
                     SqlConnection.ClearAllPools();
-                    //ProcessoNegocio.BulkInsertOrUpdate(rpi.Processo, transaction);
+                    ProcessoNegocio.BulkInsertOrUpdate(rpi.Processo, transaction);
 
-                    //ProtocoloNegocio.BulkInsert(rpi.Processo, transaction);
-                    //var processoDespachoList = ProcessoDespachoNegocio.BuildProcessoDespachos(rpi);
-                    //ProcessoDespachoNegocio.BulkInsert(processoDespachoList, transaction);
+                    ProtocoloNegocio.BulkInsert(rpi.Processo, transaction);
+                    var processoDespachoList = ProcessoDespachoNegocio.BuildProcessoDespachos(rpi);
+                    ProcessoDespachoNegocio.BulkInsert(processoDespachoList, transaction);
                     _cfe4Negocio.InsertOrUpdate(rpi.Processo, transaction);
-                    //Cfe4Negocio.InsertOrUpdate(rpi.Processo, transaction);
-                    ClasseNegocio.InsertOrUpdate(rpi.Processo, transaction);
+                    ClasseNegocio.InsertOrUpdate(rpi.NumeroRpi, rpi.Processo, transaction);
 
                     transaction.Commit();
                 }

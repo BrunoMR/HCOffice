@@ -223,15 +223,15 @@ namespace BusinessLayer
             _classeList = classeRepository.GetAll();
         }
 
-        public static void InsertOrUpdate(List<ProcessoImported> processos, SqlTransaction transaction)
+        public static void InsertOrUpdate(int rpiNumber, List<ProcessoImported> processos, SqlTransaction transaction)
         {
             IClasseRepository cfe4Repository = new ClasseRepository();
-            cfe4Repository.BulkUpsert(CreateDataTable(processos), transaction);
+            cfe4Repository.BulkUpsert(CreateDataTable(processos, rpiNumber), transaction);
         }
 
         #endregion Public Methods
 
-        private static DataTable CreateDataTable(List<ProcessoImported> processos)
+        private static DataTable CreateDataTable(List<ProcessoImported> processos, int rpiNumber)
         {
             try
             {
@@ -241,6 +241,7 @@ namespace BusinessLayer
                 dataTable.Columns.Add("TIPO_DESCRICAO", typeof(string));
                 dataTable.Columns.Add("ESPECIFICACAO", typeof(string));
                 dataTable.Columns.Add("TRADUCAO_ESPECIFICACAO", typeof(string));
+                dataTable.Columns.Add("NUMERO_RPI", typeof(int)); 
 
                 processos.ForEach(pro =>
                 {
@@ -265,7 +266,8 @@ namespace BusinessLayer
                             RetrieveCodeClasseNiceIfFromXml(cla.Codigo, pro.NumeroProcesso),
                             cla.Status,
                             specification,
-                            translate);
+                            translate,
+                            rpiNumber);
                     });
                 });
 

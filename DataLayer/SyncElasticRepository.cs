@@ -309,6 +309,114 @@
             }
         }
 
+        public IEnumerable<ProcessoSync> GetFullProcessosByRpi2(int startRpi, int endRpi)
+        {
+            try
+            {
+                var query = new StringBuilder();
+                query.AppendLine("SELECT ");
+                query.AppendLine("PRO.ID AS Id, ");
+                query.AppendLine("PRO.NUMERO AS Numero, ");
+                query.AppendLine("PRO.NOME_TITULAR AS Titular, ");
+                query.AppendLine("PRO.CPF_CNPJ_INPI_TITULAR AS CpfCnpjInpi, ");
+                query.AppendLine("PRO.PAIS_TITULAR AS TitularPais, ");
+                query.AppendLine("PAIS.NOME AS TitularPaisNome, ");
+                query.AppendLine("PRO.UF_TITULAR AS TitularUf, ");
+                query.AppendLine("UF.NOME AS TitularUfNome, ");
+                query.AppendLine("PRO.NOME_PROCURADOR AS Procurador, ");
+                query.AppendLine("PRO.MARCA AS Marca, ");
+                query.AppendLine("PRO.MARCA_ORTOGRAFADA AS MarcaOrtografada, ");
+                query.AppendLine("PRO.MARCA_NAO_ORTOGRAFADA AS MarcaNaoOrtografada, ");
+                query.AppendLine("PRO.MARCA_SEM_VOGAIS AS MarcaSemVogais, ");
+                query.AppendLine("PRO.PRIORIDADE AS Prioridade, ");
+                query.AppendLine("CONVERT(DATE, PRO.DATA_PRIORIDADE) AS PrioridadeData, ");
+                query.AppendLine("PRO.NOME_PAIS_PRIORIDADE AS PrioridadePais, ");
+                query.AppendLine("PRO.ESPECIFICACAO AS Especificacao, ");
+                query.AppendLine("PRO.APOSTILA AS Apostila, ");
+                query.AppendLine("CONVERT(DATE, PRO.DATA_DEPOSITO) AS DataDeposito, ");
+                query.AppendLine("CONVERT(DATE, PRO.DATA_CONCESSAO) AS DataConcessao, ");
+                query.AppendLine("CONVERT(DATE, PRO.DATA_REGISTRO) AS DataRegistro, ");
+                query.AppendLine("CONVERT(DATE, PRO.DATA_VIGENCIA) AS DataVigencia, ");
+                query.AppendLine("CONVERT(DATE, PRO.DATA_ORDINARIO_INICIAL) AS DataOrdinarioInicial, ");
+                query.AppendLine("CONVERT(DATE, PRO.DATA_ORDINARIO_FINAL) AS DataOrdinarioFinal, ");
+                query.AppendLine("CONVERT(DATE, PRO.DATA_EXTRA_ORDINARIO_INICIAL) AS DataExtraOrdinarioInicial, ");
+                query.AppendLine("CONVERT(DATE, PRO.DATA_EXTRA_ORDINARIO_FINAL) AS DataExtraOrdinarioFinal, ");
+                query.AppendLine("TPA.DESCRICAO AS Apresentacao, ");
+                query.AppendLine("TPN.DESCRICAO AS Natureza, ");
+                query.AppendLine("dbo.GetJustClasse(PRO.CLASSE_INTERNACIONAL) AS ClasseInternacional, ");
+                query.AppendLine("dbo.GetJustEditionClasse(PRO.CLASSE_INTERNACIONAL) AS ClasseInternacionalEdicao, ");
+                query.AppendLine("CLI.DESCRICAO AS ClasseInternacionalDescricao, ");
+                query.AppendLine("dbo.GetJustClasse(PRO.CLASSE_1) AS Classe1, ");
+                query.AppendLine("dbo.GetJustSubClasse(PRO.CLASSE_1) AS Classe1Sub, ");
+                query.AppendLine("CL1.DESCRICAO AS Classe1SubDescricao, ");
+                query.AppendLine("dbo.GetJustClasse(PRO.CLASSE_2) AS Classe2, ");
+                query.AppendLine("dbo.GetJustSubClasse(PRO.CLASSE_2) AS Classe2Sub, ");
+                query.AppendLine("CL2.DESCRICAO AS Classe2SubDescricao, ");
+                query.AppendLine("dbo.GetJustClasse(PRO.CLASSE_3) AS Classe3, ");
+                query.AppendLine("dbo.GetJustSubClasse(PRO.CLASSE_3) AS Classe3Sub, ");
+                query.AppendLine("CL3.DESCRICAO AS Classe3SubDescricao, ");
+                query.AppendLine("CFE.CODIGO_CFE4 AS Cfe4, ");
+                query.AppendLine("CFE.DESCRICAO AS Cfe4Descricao, ");
+                query.AppendLine("DEP.CODIGO AS DespachoCodigo, ");
+                query.AppendLine("DEP.DESCRICAO AS DespachoDescricao, ");
+                query.AppendLine("DEP.DESCRICAO_COMPLETA AS DespachoDescricaoCompleta, ");
+                query.AppendLine("DSI.DESCRICAO AS DespachoSituacao, ");
+                query.AppendLine("DTP.TIPO AS DespachoTipo, ");
+                query.AppendLine("DTP.DESCRICAO AS DespachoTipoDescricao, ");
+                query.AppendLine("PRD.NUMERO_RPI AS DespachoRpi, ");
+                query.AppendLine("CONVERT(DATE, PRD.DATA_DESPACHO) AS DespachoData, ");
+                query.AppendLine("PRD.COMPLEMENTO AS DespachoComplemento, ");
+                query.AppendLine("PRT.NUMERO AS ProtocoloNumero, ");
+                query.AppendLine("PRT.CODIGO_SERVICO AS ProtocoloCodigo, ");
+                query.AppendLine("CONVERT(DATE, PRT.DATA) AS ProtocoloData, ");
+                query.AppendLine("PRT.NOME_RAZAO_SOCIAL AS ProtocoloNomeRazaoSocial, ");
+                query.AppendLine("PRT.PAIS AS ProtocoloPais, ");
+                query.AppendLine("PRT.UF AS ProtocoloUf, ");
+
+                query.AppendLine("dbo.GetJustClasse(PRC.NUMERO_CLASSE) AS Classe, ");
+                query.AppendLine("dbo.GetJustEditionClasse(PRC.NUMERO_CLASSE) AS ClasseEdicao, ");
+                query.AppendLine("CLN.DESCRICAO AS ClasseDescricao, ");
+                query.AppendLine("TSC.DESCRICAO AS ClasseStatus, ");
+                query.AppendLine("PRC.ESPECIFICAO AS EspecificacaoNova ");
+
+                query.AppendLine("FROM ");
+                query.AppendLine("PROCESSO_DESPACHO             PRI ");
+                query.AppendLine("JOIN PROCESSO                 PRO ON PRO.ID = PRI.ID_PROCESSO");
+                query.AppendLine("LEFT JOIN TIPO_APRESENTACAO   TPA ON TPA.ID = PRO.TIPO_APRESENTACAO ");
+                query.AppendLine("LEFT JOIN TIPO_NATUREZA       TPN ON TPN.ID = PRO.TIPO_NATUREZA ");
+                query.AppendLine("LEFT JOIN PROCESSO_CFE4       PR4 ON PR4.ID_PROCESSO = PRO.ID ");
+                query.AppendLine("LEFT JOIN CFE4                CFE ON CFE.ID = PR4.ID_CFE4 ");
+                query.AppendLine("LEFT JOIN PROCESSO_CLASSE     PRC ON PRC.ID_PROCESSO = PRO.ID ");
+                query.AppendLine("LEFT JOIN CLASSE              CLN ON CLN.NUMERO_CLASSE = PRC.NUMERO_CLASSE ");
+                query.AppendLine("LEFT JOIN TIPO_SITUACAO_CLASSE TSC ON TSC.TIPO = PRC.TIPO ");
+                query.AppendLine("LEFT JOIN PROCESSO_DESPACHO   PRD ON PRD.ID_PROCESSO = PRO.ID ");
+                query.AppendLine("LEFT JOIN DESPACHO            DEP ON DEP.ID = PRD.ID_DESPACHO ");
+                query.AppendLine("LEFT JOIN PROTOCOLO           PRT ON PRT.ID = PRD.ID_PROTOCOLO ");
+                query.AppendLine("LEFT JOIN TIPO_SITUACAO       DSI ON DSI.TIPO = DEP.SITUACAO ");
+                query.AppendLine("LEFT JOIN TIPO_DESPACHO       DTP ON DTP.TIPO = DEP.TIPO ");
+                query.AppendLine("LEFT JOIN CLASSE              CLI ON CLI.NUMERO_CLASSE = PRO.CLASSE_INTERNACIONAL ");
+                query.AppendLine("LEFT JOIN CLASSE              CL1 ON CL1.NUMERO_CLASSE = PRO.CLASSE_1 ");
+                query.AppendLine("LEFT JOIN CLASSE              CL2 ON CL2.NUMERO_CLASSE = PRO.CLASSE_2 ");
+                query.AppendLine("LEFT JOIN CLASSE              CL3 ON CL3.NUMERO_CLASSE = PRO.CLASSE_3 ");
+                query.AppendLine("LEFT JOIN PAIS                PAIS ON PAIS.SIGLA = PRO.PAIS_TITULAR ");
+                query.AppendLine("LEFT JOIN UF                  UF ON UF.SIGLA = PRO.UF_TITULAR ");
+                query.AppendLine("WHERE ");
+                query.AppendLine("PRI.NUMERO_RPI BETWEEN @startRpi AND @endRpi ");
+                //query.AppendLine("ORDER BY ");
+                //query.AppendLine("Numero, ");
+                //query.AppendLine("DespachoRpi, ");
+                //query.AppendLine("DespachoCodigo ");
+
+                var connection = ConnectionDapper.RetornaInstancia().AbreConexao();
+                return connection.Query<ProcessoSync>(query.ToString(), new { startRpi, endRpi }, commandTimeout: 1800).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Não foi possível Sincronizar ", ex.InnerException);
+            }
+        }
+
+
         /// <summary>
         /// The get imported processos.
         /// </summary>

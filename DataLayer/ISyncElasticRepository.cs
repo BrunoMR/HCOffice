@@ -48,6 +48,9 @@
         /// </returns>
         IEnumerable<ProcessoSync> GetFullProcessosByRpi(int startRpi, int endRpi);
 
+
+        IEnumerable<ProcessoSync> GetFullProcessosByRpi2(int startRpi, int endRpi);
+
         /// <summary>
         /// Return the processes that recently imported
         /// </summary>

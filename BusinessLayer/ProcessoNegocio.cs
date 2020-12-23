@@ -329,7 +329,7 @@
                             pro.Marca?.Nome.RetirarVogais(),
                             pro.DadosDeMadri?.NumeroInscricaoInternacional,
                             pro.DadosDeMadri?.DataRecebimentoInpi.VerificarData(),
-                            pro.Marca.Natureza);
+                            pro.Marca?.Natureza);
                     });
 
 

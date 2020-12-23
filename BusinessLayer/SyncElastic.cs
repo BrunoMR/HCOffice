@@ -76,8 +76,11 @@
 
         public bool SynchronizationProcessesByRpi(int startRpi, int endRpi)
         {
-            var processosSync = this.syncElasticRepository.GetFullProcessosByRpi(startRpi, endRpi);
+            var tempo = System.Diagnostics.Stopwatch.StartNew();
+            var processosSync = syncElasticRepository.GetFullProcessosByRpi(startRpi, endRpi);
             var processoList = BuildAllObjectsToIndex(processosSync);
+            tempo.Stop();
+
 
             return Index(processoList, "Main");
         }
@@ -576,7 +579,7 @@
                 {
                     ProcessoNumero = x.Key.Numero,
                     Codigo = x.Key.Classe.Trim(),
-                    Edicao = x.Key.ClasseEdicao.TrimStart('0'),
+                    Edicao = x.Key.ClasseEdicao?.TrimStart('0'),
                     Descricao = x.Key.ClasseDescricao,
                     Status = x.Key.ClasseStatus,
                     Especificado = x.Key.EspecificacaoNova
