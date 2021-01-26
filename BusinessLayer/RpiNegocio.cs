@@ -1,4 +1,6 @@
-﻿namespace BusinessLayer
+﻿using BusinessLayer.Interfaces;
+
+namespace BusinessLayer
 {
     using System;
     using System.Collections.Generic;
@@ -23,10 +25,12 @@
         /// The cfe 4 repository.
         /// </summary>
         private readonly ICfe4Negocio _cfe4Negocio;
+        private readonly ITitularBusiness _titularBusiness;
 
-        public RpiNegocio(ICfe4Negocio cfe4Negocio)
+        public RpiNegocio(ICfe4Negocio cfe4Negocio, ITitularBusiness titularBusiness)
         {
             _cfe4Negocio = cfe4Negocio;
+            _titularBusiness = titularBusiness;
         }
         
         #region Public Methods
@@ -110,6 +114,7 @@
                     var processoDespachoList = ProcessoDespachoNegocio.BuildProcessoDespachos(rpi);
                     ProcessoDespachoNegocio.BulkInsert(processoDespachoList, transaction);
                     _cfe4Negocio.InsertOrUpdate(rpi.Processo, transaction);
+                    _titularBusiness.InsertOrUpdate(rpi.Processo, transaction);
                     ClasseNegocio.InsertOrUpdate(rpi.NumeroRpi, rpi.Processo, transaction);
 
                     transaction.Commit();

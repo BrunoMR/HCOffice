@@ -1,11 +1,12 @@
-﻿namespace DataLayer
-{
-    using System;
-    using System.Data;
-    using System.Data.SqlClient;
-    using Connections;
-    using DTOLayer;
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using DataLayer.Connections;
+using DataLayer.Interfaces;
+using DTOLayer;
 
+namespace DataLayer.Implementations
+{
     /// <summary>
     /// The cfe 4 repository.
     /// </summary>

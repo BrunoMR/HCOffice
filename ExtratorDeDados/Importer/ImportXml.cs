@@ -16,7 +16,7 @@
 
             DespachoNegocio.BuildAdditionalTextOfDespacho(rpi);
             DespachoNegocio.BuildPetitionOfDespacho(rpi);
-            TitularNegocio.RemoveSecondTitular(rpi);
+            //TitularBusiness.RemoveSecondTitular(rpi);
 
             return rpi;
         }   

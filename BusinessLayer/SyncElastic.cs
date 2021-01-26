@@ -1,4 +1,7 @@
-﻿namespace BusinessLayer
+﻿using BusinessLayer.Implementations;
+using DataLayer.Implementations;
+
+namespace BusinessLayer
 {
     using System;
     using System.Collections.Generic;
@@ -62,7 +65,7 @@
         public bool SynchronizationProcessesByAllRpis()
         {
             //TODO: arrumar aqui
-            var rpiNegocio = new RpiNegocio(new Cfe4Negocio(new Cfe4Repository()));
+            var rpiNegocio = new RpiNegocio(new Cfe4Negocio(new Cfe4Repository()), new TitularBusiness(new TitularRepository()));
             var rpiList = rpiNegocio.GetAll();
 
             var result = false;

@@ -1,4 +1,7 @@
-﻿namespace DataLayer.Ioc
+﻿using DataLayer.Implementations;
+using DataLayer.Interfaces;
+
+namespace DataLayer.Ioc
 {
     using DataLayer;
     using SimpleInjector;
@@ -9,6 +12,7 @@
         {
             container.Register(typeof(IRepository<>), typeof(Repository<>), Lifestyle.Scoped);
             container.Register<ICfe4Repository, Cfe4Repository>(Lifestyle.Scoped);
+            container.Register<ITitularRepository, TitularRepository>(Lifestyle.Scoped);
         }
     }
 }

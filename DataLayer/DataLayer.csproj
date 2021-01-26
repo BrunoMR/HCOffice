@@ -77,6 +77,8 @@
     <Compile Include="Extensions\PagingExtensions.cs" />
     <Compile Include="IAtributoRepository.cs" />
     <Compile Include="IEstadoRepository.cs" />
+    <Compile Include="Implementations\TitularRepository.cs" />
+    <Compile Include="Interfaces\ITitularRepository.cs" />
     <Compile Include="IProcessoCfe4Repository.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Repository.cs" />
@@ -86,7 +88,7 @@
     <Compile Include="EstadoRepository.cs" />
     <Compile Include="PaisRepository.cs" />
     <Compile Include="ClienteRepository.cs" />
-    <Compile Include="Cfe4Repository.cs" />
+    <Compile Include="Implementations\Cfe4Repository.cs" />
     <Compile Include="ClasseAfinidadeRepository.cs" />
     <Compile Include="ClasseRepository.cs" />
     <Compile Include="ConfiguracaoRepository.cs" />
@@ -96,7 +98,7 @@
     <Compile Include="DespachoRepository.cs" />
     <Compile Include="IPaisRepository.cs" />
     <Compile Include="IClienteRepository.cs" />
-    <Compile Include="ICfe4Repository.cs" />
+    <Compile Include="Interfaces\ICfe4Repository.cs" />
     <Compile Include="IClasseAfinidadeRepository.cs" />
     <Compile Include="IClasseRepository.cs" />
     <Compile Include="IConfiguracaoRepository.cs" />
@@ -131,6 +133,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

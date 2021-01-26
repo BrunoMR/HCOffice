@@ -6,9 +6,8 @@ using Identity.Configuration;
 using Identity.Model;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
-using SistemaWeb.Controllers;
 
-namespace EP.IdentityIsolation.MVC.Controllers
+namespace SistemaWeb.Controllers
 {
     [Authorize]
     public class ManageController : Controller

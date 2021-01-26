@@ -6,37 +6,16 @@ namespace DTOLayer
     [Serializable]
     public class Titular
     {
-        private string _nome;
-        private string _pais;
-        private string _uf;
-        private string _cpfCnpj;
-        
         [XmlAttribute("nome-razao-social")]
-        public string Nome
-        {
-            get { return _nome; }
-            set { _nome = value; }
-        }
+        public string Nome { get; set; }
 
         [XmlAttribute("pais")]
-        public string Pais
-        {
-            get { return _pais; }
-            set { _pais = value; }
-        }
+        public string Pais { get; set; }
 
         [XmlAttribute("uf")]
-        public string Uf
-        {
-            get { return _uf; }
-            set { _uf = value; }
-        }
+        public string Uf { get; set; }
 
         [XmlIgnore]
-        public string CpfCnpj
-        {
-            get { return _cpfCnpj; }
-            set { _cpfCnpj = value; }
-        }
+        public string CpfCnpj { get; set; }
     }
 }

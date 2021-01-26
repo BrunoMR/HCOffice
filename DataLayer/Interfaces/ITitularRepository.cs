@@ -1,13 +1,12 @@
-﻿namespace DataLayer
-{
-    using System.Data;
-    using System.Data.SqlClient;
-    using DTOLayer;
+﻿using System.Data;
+using System.Data.SqlClient;
 
+namespace DataLayer.Interfaces
+{
     /// <summary>
-    /// The Cfe4Repository interface.
+    /// The TitularRepository interface.
     /// </summary>
-    public interface ICfe4Repository : IRepository<CFE4>
+    public interface ITitularRepository
     {
         /// <summary>
         /// The bulk upsert.

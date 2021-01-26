@@ -1,4 +1,7 @@
-﻿namespace BusinessLayer
+﻿using DataLayer.Implementations;
+using DataLayer.Interfaces;
+
+namespace BusinessLayer
 {
     using System;
     using System.Collections.Generic;
