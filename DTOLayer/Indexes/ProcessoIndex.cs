@@ -9,12 +9,15 @@
     {
         public int? Id { get; set; }
         public string Numero { get; set; }
+
+        //TODO: Removed holder properties because now there is a list with holders
         public string Titular { get; set; }
         public string CpfCnpjInpi { get; set; }
         public string TitularPais { get; set; }
         public string TitularPaisNome { get; set; }
         public string TitularUf { get; set; }
         public string TitularUfNome { get; set; }
+
         public string Procurador { get; set; }
         public string Marca { get; set; }
 
@@ -47,6 +50,7 @@
         public List<ClasseSync> Classe { get; set; }
         public List<Cfe4Sync> Cfe4 { get; set; }
         public List<DespachoSync> Despacho { get; set; }
+        public List<TitularSync> Titulares { get; set; }
         public Pagination Paginacao { get; set; }
     }
 }

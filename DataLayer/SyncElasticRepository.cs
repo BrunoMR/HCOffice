@@ -210,9 +210,9 @@
                 query.AppendLine("SELECT ");
                 query.AppendLine("PRO.ID AS Id, ");
                 query.AppendLine("PRO.NUMERO AS Numero, ");
-                query.AppendLine("PRO.NOME_TITULAR AS Titular, ");
-                query.AppendLine("PRO.CPF_CNPJ_INPI_TITULAR AS CpfCnpjInpi, ");
-                query.AppendLine("PRO.PAIS_TITULAR AS TitularPais, ");
+                query.AppendLine("PRTI.NOME_TITULAR AS Titular, ");
+                query.AppendLine("PRTI.CPF_CNPJ_INPI_TITULAR AS CpfCnpjInpi, ");
+                query.AppendLine("PRTI.PAIS_TITULAR AS TitularPais, ");
                 query.AppendLine("PAIS.NOME AS TitularPaisNome, ");
                 query.AppendLine("PRO.UF_TITULAR AS TitularUf, ");
                 query.AppendLine("UF.NOME AS TitularUfNome, ");
@@ -291,8 +291,9 @@
                 query.AppendLine("LEFT JOIN CLASSE              CL1 ON CL1.NUMERO_CLASSE = PRO.CLASSE_1 ");
                 query.AppendLine("LEFT JOIN CLASSE              CL2 ON CL2.NUMERO_CLASSE = PRO.CLASSE_2 ");
                 query.AppendLine("LEFT JOIN CLASSE              CL3 ON CL3.NUMERO_CLASSE = PRO.CLASSE_3 ");
-                query.AppendLine("LEFT JOIN PAIS                PAIS ON PAIS.SIGLA = PRO.PAIS_TITULAR ");
-                query.AppendLine("LEFT JOIN UF                  UF ON UF.SIGLA = PRO.UF_TITULAR ");
+                query.AppendLine("LEFT JOIN PROCESSO_TITULAR    PRTI ON PRTI.ID_PROCESSO = PRO.ID ");
+                query.AppendLine("LEFT JOIN PAIS                PAIS ON PAIS.SIGLA = PRTI.PAIS_TITULAR ");
+                query.AppendLine("LEFT JOIN UF                  UF ON UF.SIGLA = PRTI.UF_TITULAR ");
                 query.AppendLine("WHERE ");
                 query.AppendLine("PRI.NUMERO_RPI BETWEEN @startRpi AND @endRpi ");
                 //query.AppendLine("ORDER BY ");

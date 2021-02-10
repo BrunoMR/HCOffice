@@ -234,12 +234,13 @@ namespace BusinessLayer
             var processoList = GroupByProcessos(processosSync);
             var cfe4List = GroupByCfe4S(processosSync);
             var despachoList = GroupByDespachos(processosSync);
+            var titularList = GroupByTitulares(processosSync);
             var classeList = new List<ClasseSync>();
             classeList.AddRange(GroupByClasseInternacional(processosSync));
             classeList.AddRange(GroupByClasseNacional(processosSync));
             classeList.AddRange(GroupByClasse(processosSync));
 
-            BuildProcessoWithChilds(processoList, cfe4List, despachoList, classeList);
+            BuildProcessoWithChilds(processoList, cfe4List, despachoList, classeList, titularList);
 
             return processoList;
         }
@@ -365,6 +366,31 @@ namespace BusinessLayer
                     Codigo = x.Key.Cfe4.Trim(),
                     Descricao = x.Key.Cfe4Descricao
                 }).ToList();
+        }
+
+        private IEnumerable<TitularSync> GroupByTitulares(IEnumerable<ProcessoSync> processosSync)
+        {
+            return processosSync
+                .AsParallel()
+                .Where(x => !string.IsNullOrWhiteSpace(x.Titular))
+                .GroupBy(x => new
+                {
+                    x.Numero,
+                    x.Titular,
+                    x.TitularPais,
+                    x.TitularPaisNome,
+                    x.TitularUf,
+                    x.TitularUfNome,
+                    x.CpfCnpjInpi
+                }).Select(x => new TitularSync
+                {
+                    ProcessoNumero = x.Key.Numero,
+                    Nome = x.Key.Titular.Trim(),
+                    CpfCnpj = x.Key.CpfCnpjInpi,
+                    Pais = x.Key.TitularPaisNome,
+                    Uf = x.Key.TitularUf,
+                    UfNome = x.Key.TitularUfNome
+                });
         }
 
         private IEnumerable<DespachoSync> GroupByDespachos(IEnumerable<ProcessoSync> processosSync)
@@ -599,7 +625,8 @@ namespace BusinessLayer
         private void BuildProcessoWithChilds(IEnumerable<ProcessoIndex> processoList, 
             IEnumerable<Cfe4Sync> cfe4List, 
             IEnumerable<DespachoSync> despachoList, 
-            IEnumerable<ClasseSync> classeList)
+            IEnumerable<ClasseSync> classeList,
+            IEnumerable<TitularSync> titularList)
         {
             processoList
                 .AsParallel()
@@ -627,6 +654,24 @@ namespace BusinessLayer
                     }
 
                     #endregion CFE4
+
+                    #region Titular
+                    
+                    if (titularList.Any(c => c.ProcessoNumero == x.Numero))
+                    {
+                        x.Titulares = titularList.Where(c => c.ProcessoNumero == x.Numero)
+                            .Select(c => new TitularSync
+                            {
+                                Nome = c.Nome,
+                                CpfCnpj = c.CpfCnpj,
+                                Pais = c.Pais,
+                                Uf = c.Uf,
+                                UfNome = c.UfNome
+                            })
+                            .ToList();
+                    }
+
+                    #endregion Titular
 
                     #region Despacho
 
